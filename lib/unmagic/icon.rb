@@ -2,6 +2,12 @@
 
 require "ostruct"
 
+require_relative "icon/version"
+require_relative "icon/library"
+require_relative "icon/scanner"
+require_relative "icon/gallery"
+require_relative "icon/engine" if defined?(Rails)
+
 module Unmagic
   # Provides a simple interface for managing and rendering SVG icons.
   # Icons are organized into libraries (directories) under app/assets/icons/.

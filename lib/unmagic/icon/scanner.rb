@@ -12,12 +12,19 @@ module Unmagic
           icons = []
           libraries = Library.discover_all
 
+          if libraries.empty?
+            puts "No libraries found, nothing to scan"
+            exit
+          end
+
           # Build regex patterns for each library
           libraries.each_key do |library_name|
             pattern = %r{#{Regexp.escape(library_name)}/[a-z0-9_-]+}i
+            path = Rails.root.join("{app,lib,spec,test}/**/*.{rb,erb,html,haml}")
+            puts "Scanning #{path} for #{pattern}"
 
             # Search Ruby and template files
-            Dir.glob(Rails.root.join("{app,lib,spec,test}/**/*.{rb,erb,html,haml}")).each do |file|
+            Dir.glob(path).each do |file|
               content = File.read(file)
               icons.concat(content.scan(pattern))
             end
@@ -39,7 +46,7 @@ module Unmagic
             #{icons.join("\n")}
           TXT
 
-          Rails.logger.info "[unmagic-icon] Wrote #{icons.count} icon references to #{ICONS_FILE}"
+          puts "Wrote #{icons.count} icon references to #{ICONS_FILE}"
           icons
         end
       end
