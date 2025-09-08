@@ -38,29 +38,13 @@ module IconWebSandbox
     config.cache_classes = false
     config.reload_classes_only_on_change = true
 
-    # Set the root to our gem directory so Rails.root works correctly
-    config.root = __dir__
-
-    # Override the icon search paths to use our tmp directory
-    def self.override_icon_paths!
-      Unmagic::Icon.define_singleton_method(:search_paths) do
-        [ [ nil, Pathname.new(ICONS_PATH) ] ]
-      end
-
-      # Clear library cache and force rediscovery
-      Unmagic::Icon::Library.instance_variable_set(:@libraries, nil)
-    end
+    # config.root = __dir__
 
     routes.append do
       mount Unmagic::Icon::Web => '/'
     end
   end
 end
-
-Unmagic::Icon.preload!
-
-# Override icon paths before initialization
-IconWebSandbox::Application.override_icon_paths!
 
 IconWebSandbox::Application.initialize!
 run IconWebSandbox::Application
