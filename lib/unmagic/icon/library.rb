@@ -29,15 +29,18 @@ module Unmagic
       def has_icons?
         Dir.glob(@path.join("*.svg")).any?
       end
+
       class << self
         # Discover all icon libraries with proper prefixes (optimized)
         def discover_all
           @discover_all ||= begin
             libraries = {}
 
+            puts "Looking for icons in #{Icon.search_paths}"
+
             Icon.search_paths.each do |prefix, base_path|
               # More efficient: walk directories instead of globbing all files
-              Dir.glob(base_path.join("**/")).each do |dir_path|
+              Dir.glob(File.join(base_path, "**/")).each do |dir_path|
                 next unless File.directory?(dir_path)
 
                 # Check if this directory has any SVG files

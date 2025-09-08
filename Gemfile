@@ -2,8 +2,8 @@
 
 source "https://rubygems.org"
 
-# gem "unmagic-color", git: "git@github.com:unreasonable-magic/unmagic-color"
-# gem "unmagic-enum", git: "git@github.com:unreasonable-magic/unmagic-enum"
+gem "unmagic-color", git: "git@github.com:unreasonable-magic/unmagic-color"
+gem "unmagic-support", git: "git@github.com:unreasonable-magic/unmagic-support"
 gem "unmagic-terminal", git: "git@github.com:unreasonable-magic/unmagic-terminal"
 
 gemspec

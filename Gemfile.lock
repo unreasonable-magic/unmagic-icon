@@ -1,3 +1,24 @@
+GIT
+  remote: git@github.com:unreasonable-magic/unmagic-color
+  revision: 633250048b19fc20c4bf1150e05919ee4e297062
+  specs:
+    unmagic-color (0.1.0)
+
+GIT
+  remote: git@github.com:unreasonable-magic/unmagic-support
+  revision: b286b813e690f00d39287f59f81fdbcef3363e31
+  specs:
+    unmagic-support (0.1.0)
+      activesupport (>= 7.0)
+
+GIT
+  remote: git@github.com:unreasonable-magic/unmagic-terminal
+  revision: 0419d13d8a2af72490a2af61c6340fcdbced57af
+  specs:
+    unmagic-terminal (0.1.0)
+      unmagic-color
+      unmagic-support
+
 PATH
   remote: .
   specs:
@@ -210,7 +231,10 @@ DEPENDENCIES
   puma
   rspec
   rubocop-rails-omakase
+  unmagic-color!
   unmagic-icon!
+  unmagic-support!
+  unmagic-terminal!
 
 BUNDLED WITH
    2.7.1

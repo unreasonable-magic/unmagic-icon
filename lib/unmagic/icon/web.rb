@@ -6,7 +6,7 @@ require "cgi"
 
 module Unmagic
   class Icon
-    class Gallery
+    class Web
       def self.call(env)
         new.call(env)
       end
@@ -40,7 +40,7 @@ module Unmagic
         end
 
         # Render the view
-        template_path = File.expand_path("../../views/gallery.html.erb", __dir__)
+        template_path = File.expand_path("web/layout.html.erb", __dir__)
         template = ERB.new(File.read(template_path))
         html = template.result(binding)
 

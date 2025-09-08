@@ -9,18 +9,20 @@ require 'rails'
 require 'action_controller/railtie'
 require 'action_view/railtie'
 
-require_relative 'lib/unmagic-icon'
+require_relative 'lib/unmagic/icon'
+require_relative 'lib/unmagic/icon/downloader'
 
-ICONS_PATH = File.join(__dir__, 'tmp/icons')
+ICON_LIBRARY = :silk
+ICON_BASE_PATH = File.join(__dir__, 'tmp/icons')
+ICON_LIBRARY_PATH = File.join(ICON_BASE_PATH, ICON_LIBRARY.to_s)
+Unmagic::Icon::Downloader.download(:silk, target_dir: ICON_LIBRARY_PATH)
 
-# Create icons directory if it doesn't exist
-unless Dir.exist?(ICONS_PATH)
-  require 'fileutils'
-  FileUtils.mkdir_p(ICONS_PATH)
+Unmagic::Icon.init do |config|
+  config.paths = [ ICON_BASE_PATH ]
 end
 
 # Create a minimal Rails application for the icon browser
-module IconGallerySandbox
+module IconWebSandbox
   class Application < Rails::Application
     config.load_defaults 8.0
 
@@ -50,13 +52,15 @@ module IconGallerySandbox
     end
 
     routes.append do
-      mount Unmagic::Icon::Gallery => '/'
+      mount Unmagic::Icon::Web => '/'
     end
   end
 end
 
-# Override icon paths before initialization
-IconGallerySandbox::Application.override_icon_paths!
+Unmagic::Icon.preload!
 
-IconGallerySandbox::Application.initialize!
-run IconGallerySandbox::Application
+# Override icon paths before initialization
+IconWebSandbox::Application.override_icon_paths!
+
+IconWebSandbox::Application.initialize!
+run IconWebSandbox::Application

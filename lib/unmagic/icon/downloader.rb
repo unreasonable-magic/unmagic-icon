@@ -86,15 +86,13 @@ module Unmagic
 
       class << self
         # Download a specific icon library
-        def download(library, force: false)
+        def download(library, target_dir: Rails.root.join("tmp/icons/#{library}"), force: false)
           library = library.to_sym
           config = LIBRARIES[library]
 
           raise DownloadError, "Unknown library: #{library}" unless config
 
-          target_dir = Rails.root.join("tmp/icons/#{library}")
-
-          if target_dir.exist? && !force
+          if Dir.exist?(target_dir) && !force
             puts "→ Skipping #{config[:name]} (already exists, use force: true to re-download)"
             return
           end
@@ -295,7 +293,7 @@ module Unmagic
 
         # Count SVG files in directory
         def count_svgs(directory)
-          Dir.glob(directory.join("**/*.svg")).size
+          Dir.glob(File.join("**/*.svg")).size
         end
       end
     end

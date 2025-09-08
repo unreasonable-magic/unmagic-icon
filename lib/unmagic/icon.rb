@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
-require "ostruct"
-
 require_relative "icon/version"
+require_relative "icon/configuration"
 require_relative "icon/library"
 require_relative "icon/scanner"
-require_relative "icon/gallery"
+require_relative "icon/web"
 require_relative "icon/engine" if defined?(Rails)
 
 module Unmagic
@@ -76,6 +75,22 @@ module Unmagic
     end
 
     class << self
+      # Initialize configuration with a block
+      def init
+        yield(configuration) if block_given?
+        @initialized = true
+      end
+
+      # Check if initialization has been called
+      def initialized?
+        @initialized == true
+      end
+
+      # Get the current configuration
+      def configuration
+        @configuration ||= Configuration.new
+      end
+
       def find(reference)
         # Validate reference format
         raise InvalidReferenceError, "Icon reference cannot be blank" if reference.blank?
@@ -139,11 +154,9 @@ module Unmagic
 
       def search_paths
         @search_paths ||= begin
-                            paths = []
-
-                            # Main app icons
-                            app_path = Rails.root.join("app/assets/icons")
-                            paths << [ nil, app_path ] if app_path.exist?
+                            paths = Unmagic::Icon.configuration.paths.dup.map do |path|
+                              [ nil, path ]
+                            end
 
                             # Engine icons with prefixes
                             Rails.application.railties.select do |r|
@@ -160,51 +173,14 @@ module Unmagic
                           end
       end
 
+      attr_reader :libraries
+
       # Force library discovery at boot time (called from railtie)
       def preload!
-        libraries = Library.discover_all
-        total_icons = libraries.values.sum(&:count)
-        Rails.logger.info "[unmagic-icon] Preloaded #{libraries.count} icon libraries with #{total_icons} total icons"
-        libraries
-      end
-
-      # Force library discovery at boot time (called from railtie)
-      def preload_libraries!
-        @libraries = Unmagic::Icon::Library.discover_all
-        total_icons = @libraries.values.sum { |l| l.icons.count }
-        Rails.logger.info "[unmagic-icon] Preloaded #{@libraries.count} icon libraries with #{total_icons} total icons"
+        @libraries = Library.discover_all
+        total_icons = @libraries.values.sum(&:count)
+        puts "[unmagic-icon] Preloaded #{@libraries.count} icon libraries with #{total_icons} total icons"
         @libraries
-      end
-
-      # Get all icon libraries for browsing
-      def libraries
-        @libraries ||= begin
-                         libs = {}
-
-                         Library.discover_all.each do |name, icons|
-                           libs[name] = OpenStruct.new(name: name, icons: icons)
-                         end
-
-                         libs
-                       end
-      end
-
-      class << self
-        # Initialize configuration with a block
-        def init
-          yield(configuration) if block_given?
-          @initialized = true
-        end
-
-        # Check if initialization has been called
-        def initialized?
-          @initialized == true
-        end
-
-        # Get the current configuration
-        def configuration
-          @configuration ||= Configuration.new
-        end
       end
     end
   end
