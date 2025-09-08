@@ -8,21 +8,6 @@ require_relative "icon/web"
 require_relative "icon/engine" if defined?(Rails)
 
 module Unmagic
-  # Provides a simple interface for managing and rendering SVG icons.
-  # Icons are organized into libraries (directories) under app/assets/icons/.
-  # Engine icons are automatically discovered from Rails engines.
-  #
-  # Example:
-  #
-  #   icon = Unmagic::Icon.find("feather/home")
-  #   icon.to_svg(class: "w-5 h-5")
-  #   #=> "<svg class='unmagic-icon[feather] fill-current w-5 h-5' role='img' aria-label='Home'>...</svg>"
-  #
-  #   # Engine icon
-  #   icon = Unmagic::Icon.find("unmagic_ui:feather/settings")
-  #   icon.to_svg(class: "w-4 h-4")
-  #   #=> "<svg class='unmagic-icon[unmagic_ui:feather] fill-current w-4 h-4' role='img' aria-label='Settings'>...</svg>"
-  #
   class Icon
     class Error < StandardError; end
     class LibraryNotFoundError < Error; end
@@ -39,7 +24,7 @@ module Unmagic
       end
 
       def configuration
-        @configuration ||= Configuration.new
+        @configuration ||= Unmagic::Icon::Configuration.new
       end
 
       def libraries
@@ -51,27 +36,6 @@ module Unmagic
         library_path = library_parts.join("/")
 
         Unmagic::Icon::Library::Registry.find(library_path).find(icon_name)
-      end
-
-      def search_paths
-        @search_paths ||= begin
-                            paths = Unmagic::Icon.configuration.paths.dup.map do |path|
-                              [ nil, path ]
-                            end
-
-                            # Engine icons with prefixes
-                            Rails.application.railties.select do |r|
-                              r.is_a?(Rails::Engine) && r.class != Rails::Application
-                            end.each do |engine|
-                              engine_path = engine.root.join("app/assets/icons")
-                              next unless engine_path.exist?
-
-                              prefix = engine.class.name.underscore.gsub(%r{/engine$}, "").tr("/", "_")
-                              paths << [ prefix, engine_path ]
-                            end
-
-                            paths
-                          end
       end
     end
 
