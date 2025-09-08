@@ -38,8 +38,6 @@ module IconWebSandbox
     config.cache_classes = false
     config.reload_classes_only_on_change = true
 
-    # config.root = __dir__
-
     routes.append do
       mount Unmagic::Icon::Web => '/'
     end
