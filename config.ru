@@ -10,12 +10,12 @@ require 'action_controller/railtie'
 require 'action_view/railtie'
 
 require_relative 'lib/unmagic/icon'
-require_relative 'lib/unmagic/icon/downloader'
+require_relative 'lib/unmagic/icon/library/downloader'
 
 ICON_LIBRARY = :silk
 ICON_BASE_PATH = File.join(__dir__, 'tmp/icons')
 ICON_LIBRARY_PATH = File.join(ICON_BASE_PATH, ICON_LIBRARY.to_s)
-Unmagic::Icon::Downloader.download(:silk, target_dir: ICON_LIBRARY_PATH)
+Unmagic::Icon::Library::Downloader.new(library: :silk).download(target_dir: ICON_LIBRARY_PATH)
 
 Unmagic::Icon.init do |config|
   config.paths = [ ICON_BASE_PATH ]

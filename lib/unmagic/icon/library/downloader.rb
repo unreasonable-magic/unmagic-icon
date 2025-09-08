@@ -10,87 +10,84 @@ require "unmagic/support/monitored_enumerator"
 
 module Unmagic
   class Icon
-    # Downloads and installs popular icon libraries from various sources.
-    # Supports GitHub releases, npm packages, and raw GitHub files.
-    #
-    # Example:
-    #
-    #   Unmagic::Icon::Downloader.download_all
-    #   Unmagic::Icon::Downloader.download(:heroicons, force: true)
-    #
-    class Downloader
-      class Error < StandardError; end
-      class DownloadError < Error; end
-      class ExtractionError < Error; end
+    class Library
+      class Downloader
+        class Error < StandardError; end
+        class DownloadError < Error; end
+        class ExtractionError < Error; end
 
-      # Configuration for each icon library
-      LIBRARIES = {
-        heroicons: {
-          name: "Heroicons",
-          description: "Beautiful hand-crafted SVG icons by the makers of Tailwind CSS",
-          url: "https://github.com/tailwindlabs/heroicons/archive/refs/tags/v2.2.0.zip",
-          type: :zip,
-          extract_paths: [
-            "heroicons-2.2.0/optimized/16/solid/*.svg",
-            "heroicons-2.2.0/optimized/20/solid/*.svg",
-            "heroicons-2.2.0/optimized/24/solid/*.svg",
-            "heroicons-2.2.0/optimized/24/outline/*.svg"
-          ],
-          target_subdirs: {
-            "heroicons-2.2.0/optimized/16/solid" => "16-solid",
-            "heroicons-2.2.0/optimized/20/solid" => "20-solid",
-            "heroicons-2.2.0/optimized/24/solid" => "24-solid",
-            "heroicons-2.2.0/optimized/24/outline" => "24-outline"
+        # Configuration for each icon library
+        LIBRARIES = {
+          heroicons: {
+            name: "Heroicons",
+            description: "Beautiful hand-crafted SVG icons by the makers of Tailwind CSS",
+            url: "https://github.com/tailwindlabs/heroicons/archive/refs/tags/v2.2.0.zip",
+            type: :zip,
+            extract_paths: [
+              "heroicons-2.2.0/optimized/16/solid/*.svg",
+              "heroicons-2.2.0/optimized/20/solid/*.svg",
+              "heroicons-2.2.0/optimized/24/solid/*.svg",
+              "heroicons-2.2.0/optimized/24/outline/*.svg"
+            ],
+            target_subdirs: {
+              "heroicons-2.2.0/optimized/16/solid" => "16-solid",
+              "heroicons-2.2.0/optimized/20/solid" => "20-solid",
+              "heroicons-2.2.0/optimized/24/solid" => "24-solid",
+              "heroicons-2.2.0/optimized/24/outline" => "24-outline"
+            }
+          },
+          feather: {
+            name: "Feather Icons",
+            description: "Simply beautiful open source icons",
+            url: "https://github.com/feathericons/feather/archive/refs/tags/v4.29.1.zip",
+            type: :zip,
+            extract_paths: [ "feather-4.29.1/icons/*.svg" ]
+          },
+          tabler: {
+            name: "Tabler Icons",
+            description: "Over 5400 free SVG icons",
+            url: "https://github.com/tabler/tabler-icons/releases/download/v3.24.0/tabler-icons-3.24.0.zip",
+            type: :zip,
+            extract_paths: [ "svg/*.svg" ]
+          },
+          lucide: {
+            name: "Lucide Icons",
+            description: "Beautiful & consistent icons",
+            url: "https://github.com/lucide-icons/lucide/releases/download/v0.468.0/lucide-icons-0.468.0.zip",
+            type: :zip,
+            extract_paths: [ "*.svg" ]
+          },
+          "simple-icons": {
+            name: "Simple Icons",
+            description: "SVG icons for popular brands",
+            url: "https://registry.npmjs.org/simple-icons/-/simple-icons-14.2.0.tgz",
+            type: :tgz,
+            extract_paths: [ "package/icons/*.svg" ]
+          },
+          silk: {
+            name: "Silk Icons Scalable",
+            description: "The classic silk icon set recreated as SVG",
+            type: :github_raw,
+            repo: "frhun/silk-icon-scalable",
+            branch: "main",
+            paths: [
+              "baseicons/*.svg",
+              "extra/*.svg"
+            ]
           }
-        },
-        feather: {
-          name: "Feather Icons",
-          description: "Simply beautiful open source icons",
-          url: "https://github.com/feathericons/feather/archive/refs/tags/v4.29.1.zip",
-          type: :zip,
-          extract_paths: [ "feather-4.29.1/icons/*.svg" ]
-        },
-        tabler: {
-          name: "Tabler Icons",
-          description: "Over 5400 free SVG icons",
-          url: "https://github.com/tabler/tabler-icons/releases/download/v3.24.0/tabler-icons-3.24.0.zip",
-          type: :zip,
-          extract_paths: [ "svg/*.svg" ]
-        },
-        lucide: {
-          name: "Lucide Icons",
-          description: "Beautiful & consistent icons",
-          url: "https://github.com/lucide-icons/lucide/releases/download/v0.468.0/lucide-icons-0.468.0.zip",
-          type: :zip,
-          extract_paths: [ "*.svg" ]
-        },
-        "simple-icons": {
-          name: "Simple Icons",
-          description: "SVG icons for popular brands",
-          url: "https://registry.npmjs.org/simple-icons/-/simple-icons-14.2.0.tgz",
-          type: :tgz,
-          extract_paths: [ "package/icons/*.svg" ]
-        },
-        silk: {
-          name: "Silk Icons Scalable",
-          description: "The classic silk icon set recreated as SVG",
-          type: :github_raw,
-          repo: "frhun/silk-icon-scalable",
-          branch: "main",
-          paths: [
-            "baseicons/*.svg",
-            "extra/*.svg"
-          ]
-        }
-      }.freeze
+        }.freeze
 
-      class << self
-        # Download a specific icon library
-        def download(library, target_dir: Rails.root.join("tmp/icons/#{library}"), force: false)
+        attr_reader :library
+
+        def initialize(library:)
           library = library.to_sym
-          config = LIBRARIES[library]
+          raise ArgumentError, "Unknown library: #{library}" unless LIBRARIES[library.to_sym]
+          @library = library
+        end
 
-          raise DownloadError, "Unknown library: #{library}" unless config
+        # Download a specific icon library
+        def download(target_dir: Rails.root.join("tmp/icons/#{library}"), force: false)
+          config = LIBRARIES[library]
 
           if Dir.exist?(target_dir) && !force
             puts "→ Skipping #{config[:name]} (already exists, use force: true to re-download)"

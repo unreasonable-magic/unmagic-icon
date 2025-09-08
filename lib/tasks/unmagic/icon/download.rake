@@ -4,7 +4,7 @@ namespace :unmagic do
   namespace :icons do
     desc "Download popular icon libraries"
     task :download, %i[library force] => :environment do |_task, args|
-      # require_relative "../../unmagic/icon/downloader"
+      require_relative "../../../unmagic/icon/library/downloader"
 
       library = args[:library]&.strip
       force = args[:force] == "force"
@@ -12,7 +12,7 @@ namespace :unmagic do
       if library.nil? || library.empty?
         puts "Error: Please specify a library to download"
         puts "Available libraries:"
-        Unmagic::Icon::Downloader::LIBRARIES.each do |key, config|
+        Unmagic::Icon::Library::Downloader::LIBRARIES.each do |key, config|
           puts "  #{key.to_s.ljust(15)} - #{config[:description]}"
         end
         puts "\nUsage: rails unmagic:icons:download[heroicons]"
@@ -21,7 +21,7 @@ namespace :unmagic do
       end
 
       puts "Downloading #{library}..."
-      Unmagic::Icon::Downloader.download(library.to_sym, force: force)
+      Unmagic::Icon::Library::Downloader.new(library).download(force: force)
 
       # Run build task to update icons.txt
       puts "\nUpdating icons.txt..."
