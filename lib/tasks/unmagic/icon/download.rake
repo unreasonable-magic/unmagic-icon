@@ -21,11 +21,7 @@ namespace :unmagic do
       end
 
       puts "Downloading #{library}..."
-      Unmagic::Icon::Library::Downloader.new(library).download(force: force)
-
-      # Run build task to update icons.txt
-      puts "\nUpdating icons.txt..."
-      Rake::Task["unmagic:icons:build"].invoke
+      Unmagic::Icon::Library::Downloader.new(library: library).download(force: force)
     end
   end
 end

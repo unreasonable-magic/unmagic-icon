@@ -202,14 +202,14 @@
     </div>
     
     <div class="tabs">
-      <% @libraries.each do |library_name, library| %>
+      <% @libraries.each do |library| %>
         <% 
           query_param = @search_query.empty? ? "" : "?q=#{CGI.escape(@search_query)}"
-          is_active = library_name == @selected_library
+          is_active = library == @selected_library
         %>
-        <a href="/<%= library_name %><%= query_param %>" 
+        <a href="/<%= library.name %><%= query_param %>" 
            class="tab <%= is_active ? 'active' : '' %>">
-          <%= library_name %> (<%= library.icons.length %>)
+          <%= library.name %> (<%= library.icons.length %>)
         </a>
       <% end %>
     </div>
@@ -223,15 +223,8 @@
   
   <script>
     // Icon data for current library only
-    const currentLibrary = '<%= @selected_library %>';
-    const iconsData = <%= @libraries[@selected_library].icons.to_json %>;
-    
-    // Pre-rendered SVGs for current library only
-    const svgCache = {};
-    <% library = @libraries[@selected_library] %>
-    <% library.icons.each do |icon_name| %>
-      svgCache['<%= icon_name %>'] = `<%= render_icon_svg(@selected_library, icon_name).gsub('`', '\`').gsub('$', '\$') %>`;
-    <% end %>
+    const currentLibrary = '<%= @selected_library.name %>';
+    const iconsData = <%= @selected_library.icons.to_json %>;
     
     // State
     let searchQuery = '<%= @search_query %>';
@@ -247,7 +240,7 @@
     function filterIcons() {
       const query = searchQuery.toLowerCase();
       const filtered = query 
-        ? iconsData.filter(icon => icon.toLowerCase().includes(query))
+        ? iconsData.filter(icon => icon.name.toLowerCase().includes(query))
         : iconsData;
       
       renderIcons(filtered);
@@ -260,15 +253,11 @@
         return;
       }
       
-      iconGrid.innerHTML = icons.map(iconName => {
-        if (!svgCache[iconName]) {
-          throw new Error(`Icon not found: ${currentLibrary}/${iconName}`);
-        }
-        
+      iconGrid.innerHTML = icons.map(icon => {
         return `
-          <div class="icon-item" data-icon="${iconName}">
-            ${svgCache[iconName]}
-            <div class="icon-name">${iconName}</div>
+          <div class="icon-item" data-icon="${icon.name}">
+            ${icon.svg}
+            <div class="icon-name">${icon.name}</div>
           </div>
         `;
       }).join('');
@@ -279,7 +268,7 @@
     }
     
     function copyIcon(iconName) {
-      const text = `${currentLibrary}/${iconName}`;
+      const text = `${iconName}`;
       navigator.clipboard.writeText(text).then(() => {
         copyToast.textContent = `Copied: ${text}`;
         copyToast.classList.add('show');

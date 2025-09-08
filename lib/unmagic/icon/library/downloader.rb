@@ -86,11 +86,11 @@ module Unmagic
         end
 
         # Download a specific icon library
-        def download(target_dir: Rails.root.join("tmp/icons/#{library}"), force: false)
+        def download(target_dir: Rails.root.join("app/assets/icons/#{library}"), force: false)
           config = LIBRARIES[library]
 
           if Dir.exist?(target_dir) && !force
-            puts "→ Skipping #{config[:name]} (already exists, use force: true to re-download)"
+            puts "→ Skipping #{config[:name]} (already exists at #{target_dir}, use force: true to re-download)"
             return
           end
 
@@ -105,7 +105,7 @@ module Unmagic
           end
 
           count = count_svgs(target_dir)
-          puts "  ✓ Downloaded #{count} icons to tmp/icons/#{library}/"
+          puts "  ✓ Downloaded #{count} icons to #{target_dir}"
         end
 
         private
