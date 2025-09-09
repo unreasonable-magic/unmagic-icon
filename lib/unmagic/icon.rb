@@ -4,7 +4,6 @@ require_relative "icon/version"
 require_relative "icon/configuration"
 require_relative "icon/library"
 require_relative "icon/library/registry"
-require_relative "icon/web"
 require_relative "icon/engine" if defined?(Rails)
 
 module Unmagic

@@ -11,6 +11,7 @@ require 'action_view/railtie'
 
 require_relative 'lib/unmagic/icon'
 require_relative 'lib/unmagic/icon/library/downloader'
+require_relative 'lib/unmagic/icon/web'
 
 ICON_LIBRARY = "silk"
 ICON_BASE_PATH = File.join(__dir__, 'tmp/icons')
@@ -42,7 +43,8 @@ module IconWebSandbox
     config.reload_classes_only_on_change = true
 
     routes.append do
-      mount Unmagic::Icon::Web => '/'
+      mount Unmagic::Icon::Web => "/unmagic/icons"
+      root to: redirect("/unmagic/icons")
     end
   end
 end

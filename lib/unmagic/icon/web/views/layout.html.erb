@@ -190,7 +190,7 @@
 <body>
   <div class="header">
     <button class="theme-switcher" id="themeSwitcher">🌙</button>
-    
+
     <div class="search-box">
       <input 
         type="text" 
@@ -207,7 +207,7 @@
           query_param = @search_query.empty? ? "" : "?q=#{CGI.escape(@search_query)}"
           is_active = library == @selected_library
         %>
-        <a href="/<%= library.name %><%= query_param %>" 
+        <a href="<%= @request.env["SCRIPT_NAME"] %>/<%= library.name %><%= query_param %>" 
            class="tab <%= is_active ? 'active' : '' %>">
           <%= library.name %> (<%= library.icons.length %>)
         </a>
