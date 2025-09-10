@@ -186,6 +186,8 @@
       display: none !important;
     }
   </style>
+  <link rel="icon" href="<%= url "/public/favicon.png" %>" type="image/png">
+  <link rel="apple-touch-icon" href="<%= url "/public/favicon.png" %>">
 </head>
 <body>
   <div class="header">
@@ -196,19 +198,15 @@
         type="text" 
         id="searchInput"
         placeholder="Search icons..." 
-        value="<%= CGI.escapeHTML(@search_query) %>"
+        value="<%= escape(@search_query) %>"
         autocomplete="off"
       >
     </div>
     
     <div class="tabs">
       <% @libraries.each do |library| %>
-        <% 
-          query_param = @search_query.empty? ? "" : "?q=#{CGI.escape(@search_query)}"
-          is_active = library == @selected_library
-        %>
-        <a href="<%= @request.env["SCRIPT_NAME"] %>/<%= library.name %><%= query_param %>" 
-           class="tab <%= is_active ? 'active' : '' %>">
+        <a href="<%= url(library.name, @request.params) %>" 
+           class="tab <%= library == @selected_library ? 'active' : '' %>">
           <%= library.name %> (<%= library.icons.length %>)
         </a>
       <% end %>
