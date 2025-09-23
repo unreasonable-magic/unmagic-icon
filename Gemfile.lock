@@ -25,6 +25,7 @@ PATH
     unmagic-icon (0.1.0)
       activesupport (>= 7.0.0)
       listen (~> 3.0)
+      nokogiri (>= 1.8.5)
       railties (>= 7.0.0)
 
 GEM

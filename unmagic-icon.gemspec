@@ -21,4 +21,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport', '>= 7.0.0'
   spec.add_dependency 'listen', '~> 3.0'
   spec.add_dependency 'railties', '>= 7.0.0'
+  spec.add_dependency 'nokogiri', '>= 1.8.5'
 end

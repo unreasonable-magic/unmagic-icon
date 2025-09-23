@@ -45,6 +45,18 @@ module Unmagic
       @path = path
     end
 
+    def doc
+      Nokogiri::XML(raw_svg_content)
+    end
+
+    def attributes
+      extracted_svg[:attributes]
+    end
+
+    def contents
+      extracted_svg[:contents].strip
+    end
+
     def as_json
       { name: name, svg: to_svg }
     end
@@ -92,6 +104,20 @@ module Unmagic
 
     def raw_svg_content
       @raw_svg_content ||= File.read(@path)
+    end
+
+    def extracted_svg
+      @xml ||=
+        begin
+          root = doc.at_css("//svg")
+          {
+            attributes: root.attributes.inject({}) do |hash, (key, value)|
+              hash[key] = value.value
+              hash
+            end,
+            contents: root.children.to_xml
+          }
+        end
     end
   end
 end
