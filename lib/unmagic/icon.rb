@@ -60,7 +60,6 @@ module Unmagic
       # Extract or build CSS classes
       css_classes = [
         "unmagic-icon[#{@name}]",
-        "fill-current",
         options[:class]
       ].compact.join(" ")
 
