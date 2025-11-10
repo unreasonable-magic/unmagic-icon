@@ -36,6 +36,13 @@ module Unmagic
               "heroicons-2.2.0/optimized/24/outline" => "24-outline"
             }
           },
+          devicons: {
+            name: "Devicons",
+            description: "Set of icons representing programming languages, designing & development tools",
+            url: "https://github.com/devicons/devicon/archive/refs/tags/v2.17.0.zip",
+            type: :zip,
+            extract_paths: [ "devicon-2.17.0/icons/**/*.svg" ]
+          },
           feather: {
             name: "Feather Icons",
             description: "Simply beautiful open source icons",

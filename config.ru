@@ -13,7 +13,7 @@ require_relative 'lib/unmagic/icon'
 require_relative 'lib/unmagic/icon/library/downloader'
 require_relative 'lib/unmagic/icon/web'
 
-ICON_LIBRARY = "silk"
+ICON_LIBRARY = "devicons"
 ICON_BASE_PATH = File.join(__dir__, 'tmp/icons')
 ICON_LIBRARY_PATH = File.join(ICON_BASE_PATH, ICON_LIBRARY.to_s)
 
