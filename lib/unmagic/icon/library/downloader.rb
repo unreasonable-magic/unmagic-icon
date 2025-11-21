@@ -71,6 +71,13 @@ module Unmagic
             type: :tgz,
             extract_paths: [ "package/icons/*.svg" ]
           },
+          "vscode-material-icon-theme": {
+            name: "Material Icon Theme",
+            description: "Material Design icons for Visual Studio Code",
+            url: "https://github.com/material-extensions/vscode-material-icon-theme/archive/refs/tags/v5.29.0.zip",
+            type: :zip,
+            extract_paths: [ "icons/*.svg" ]
+          },
           silk: {
             name: "Silk Icons Scalable",
             description: "The classic silk icon set recreated as SVG",
