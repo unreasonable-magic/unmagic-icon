@@ -5,11 +5,12 @@ require "pathname"
 module Unmagic
   class Icon
     class Configuration
-      attr_accessor :paths
+      attr_accessor :paths, :libraries
       attr_writer :download_path
 
       def initialize
         @paths = []
+        @libraries = []
       end
 
       # Where `Unmagic::Icon::Library::Source` writes libraries by default.

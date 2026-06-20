@@ -27,6 +27,11 @@ module Unmagic
         @initialized == true
       end
 
+      def configure
+        yield(configuration) if block_given?
+        configuration
+      end
+
       def configuration
         @configuration ||= Unmagic::Icon::Configuration.new
       end
