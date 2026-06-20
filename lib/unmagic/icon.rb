@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
+require "active_support/core_ext/object/blank"
+require "active_support/core_ext/string/output_safety"
+require "active_support/core_ext/string/inflections"
+
 require_relative "icon/version"
 require_relative "icon/configuration"
 require_relative "icon/library"
 require_relative "icon/library/registry"
+require_relative "icon/action_view_helpers"
 require_relative "icon/engine" if defined?(Rails)
 
 module Unmagic
@@ -31,10 +36,16 @@ module Unmagic
       end
 
       def find(reference)
-        *library_parts, icon_name = reference.split("/")
-        library_path = library_parts.join("/")
+        library_path, icon_name = parse_reference(reference)
 
         Unmagic::Icon::Library::Registry.find(library_path).find(icon_name)
+      end
+
+      # Parse a "library/name" reference into [library, name], tolerating the
+      # emoji-style ":library/name:" decoration so both kinds share one syntax.
+      def parse_reference(reference)
+        *library_parts, name = reference.to_s.gsub(/\A:|:\z/, "").split("/")
+        [ library_parts.join("/"), name ]
       end
     end
 
@@ -59,6 +70,17 @@ module Unmagic
 
     def as_json
       { name: name, svg: to_svg }
+    end
+
+    # Render the asset to HTML, dispatching on its kind. SVG inlines today; a
+    # future raster asset (png/gif) would emit an <img> here, so callers stay
+    # render-agnostic.
+    def render(options = {})
+      case File.extname(@path).downcase
+      when ".svg" then to_svg(options)
+      else
+        raise Unmagic::Icon::Error, "Don't know how to render #{@path}"
+      end
     end
 
     def to_svg(options = {})
@@ -93,11 +115,9 @@ module Unmagic
       end
 
       # Only cache it if it's not got any special options
-      if options.empty?
-        @svg_cache = @svg
-      end
-
-      svg.html_safe
+      svg = svg.html_safe
+      @svg_cache = svg if options.empty?
+      svg
     end
 
     private
