@@ -8,9 +8,9 @@ module Unmagic
           key :lucide
           title "Lucide Icons"
           description "Beautiful & consistent icons"
-          url "https://github.com/lucide-icons/lucide/releases/download/v0.468.0/lucide-icons-0.468.0.zip"
+          url "https://github.com/lucide-icons/lucide/releases/download/1.21.0/lucide-icons-1.21.0.zip"
           archive :zip
-          extract "*.svg"
+          extract "icons/*.svg"
         end
       end
     end

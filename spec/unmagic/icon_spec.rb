@@ -60,6 +60,31 @@ RSpec.describe Unmagic::Icon do
     end
   end
 
+  describe "#to_svg attributes" do
+    around do |example|
+      Dir.mktmpdir { |dir| @dir = dir; example.run }
+    end
+
+    def build_icon
+      file = File.join(@dir, "foo.svg")
+      File.write(file, FixtureHelpers::SAMPLE_SVG)
+      described_class.new(name: "material/foo", path: file)
+    end
+
+    it "sets the unmagic-icon class plus any caller class, and a data marker" do
+      html = build_icon.to_svg(class: "size-8")
+      expect(html).to include('class="unmagic-icon size-8"')
+      expect(html).to include('data-unmagic-icon="material/foo"')
+    end
+
+    it "merges caller attributes and forces no role/aria-label of its own" do
+      html = build_icon.to_svg("aria-hidden": "true")
+      expect(html).to include('aria-hidden="true"')
+      expect(html).not_to include("aria-label")
+      expect(html).not_to include('role="img"')
+    end
+  end
+
   describe "#to_svg caching" do
     around do |example|
       Dir.mktmpdir { |dir| @dir = dir; example.run }

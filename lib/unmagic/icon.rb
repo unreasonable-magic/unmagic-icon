@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "cgi"
 require "active_support/core_ext/object/blank"
 require "active_support/core_ext/string/output_safety"
 require "active_support/core_ext/string/inflections"
@@ -88,38 +89,23 @@ module Unmagic
       end
     end
 
+    # Render the SVG with a `unmagic-icon` class (plus any caller class) and a
+    # `data-unmagic-icon` marker. Any other options are merged verbatim as
+    # attributes on the <svg> — so the caller controls accessibility
+    # (`aria-hidden`, `aria-label`, `role`), `id`, `data-*`, etc.
     def to_svg(options = {})
-      # Return cached version if it doesn't have any special options
-      if options.empty? && @svg_cache
-        return @svg_cache
-      end
+      return @svg_cache if options.empty? && @svg_cache
+
+      attributes = options.transform_keys(&:to_s)
+      css_classes = [ "unmagic-icon", attributes.delete("class") ].compact.join(" ")
 
       svg = raw_svg_content.dup
-
-      # Extract or build CSS classes
-      css_classes = [
-        "unmagic-icon[#{@name}]",
-        options[:class]
-      ].compact.join(" ")
-
-      # Add attributes to the opening svg tag
-      svg.sub!(/<svg\s*/i, "<svg ")
-      svg.sub!(/<svg(\s+[^>]*)?>/) do |_match|
-        attributes = ::Regexp.last_match(1) || ""
-
-        # Remove any existing class attribute
-        attributes.gsub!(/\sclass=["'][^"']*["']/, "")
-
-        # Build new attributes
-        new_attributes = []
-        new_attributes << %(class="#{css_classes}") if css_classes.present?
-        new_attributes << %(role="img")
-        new_attributes << %(aria-label="#{@name.humanize}")
-
-        "<svg#{attributes} #{new_attributes.join(' ')}>"
+      svg.sub!(/<svg(\s+[^>]*)?>/i) do
+        existing = (::Regexp.last_match(1) || "").gsub(/\sclass=["'][^"']*["']/, "")
+        extra = attributes.map { |name, value| %(#{name}="#{CGI.escapeHTML(value.to_s)}") }
+        %(<svg#{existing} class="#{css_classes}" data-unmagic-icon="#{@name}"#{extra.empty? ? "" : " #{extra.join(' ')}"}>)
       end
 
-      # Only cache it if it's not got any special options
       svg = svg.html_safe
       @svg_cache = svg if options.empty?
       svg
