@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-06-22
+
 ### Added
 - New downloadable icon libraries: `coloured-icons` (full-colour brand/tech
   logos), `bootstrap-icons`, `octicons`, `iconoir`, `material-design-icons`
   (Pictogrammers @mdi), and `phosphor` (six weights flattened into one set)
+- Server-side search in the `Unmagic::Icon::Web` Rack app
 
 ## [0.1.0] - 2026-06-21
 
@@ -38,5 +41,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   hooks into `assets:precompile`) and `unmagic:icons:download[library]`
 - `Unmagic::Icon::Web`, a Rack app for browsing the configured icon libraries
 
-[Unreleased]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/unreasonable-magic/unmagic-icon/releases/tag/v0.1.0
