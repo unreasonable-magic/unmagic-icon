@@ -10,16 +10,19 @@ require 'action_controller/railtie'
 require 'action_view/railtie'
 
 require_relative 'lib/unmagic/icon'
-require_relative 'lib/unmagic/icon/library/downloader'
+require_relative 'lib/unmagic/icon/library/source'
 require_relative 'lib/unmagic/icon/web'
 
-ICON_LIBRARY = "devicons"
+# Libraries to download into tmp/icons and browse. Add/remove keys as you like
+# (see `rails unmagic:icons:download` or Source.all for the full list).
+ICON_LIBRARIES = %w[devicons lucide phosphor bootstrap-icons]
 ICON_BASE_PATH = File.join(__dir__, 'tmp/icons')
-ICON_LIBRARY_PATH = File.join(ICON_BASE_PATH, ICON_LIBRARY.to_s)
 
-Unmagic::Icon::Library::Downloader.
-  new(library: ICON_LIBRARY).
-  download(target_dir: ICON_LIBRARY_PATH)
+ICON_LIBRARIES.each do |key|
+  Unmagic::Icon::Library::Source.find(key).new.download(
+    target_dir: File.join(ICON_BASE_PATH, Unmagic::Icon::Library::Source.find(key).dir)
+  )
+end
 
 Unmagic::Icon.init do |config|
   config.paths = [ ICON_BASE_PATH ]

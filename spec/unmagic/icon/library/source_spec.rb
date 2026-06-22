@@ -18,7 +18,13 @@ RSpec.describe Unmagic::Icon::Library::Source do
       expect(described_class.all).to include(
         Unmagic::Icon::Library::Source::Lucide,
         Unmagic::Icon::Library::Source::Silk,
-        Unmagic::Icon::Library::Source::MaterialFileIcons
+        Unmagic::Icon::Library::Source::MaterialFileIcons,
+        Unmagic::Icon::Library::Source::ColouredIcons,
+        Unmagic::Icon::Library::Source::BootstrapIcons,
+        Unmagic::Icon::Library::Source::Octicons,
+        Unmagic::Icon::Library::Source::Iconoir,
+        Unmagic::Icon::Library::Source::MaterialDesignIcons,
+        Unmagic::Icon::Library::Source::Phosphor
       )
     end
   end

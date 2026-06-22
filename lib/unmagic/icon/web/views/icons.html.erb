@@ -1,0 +1,6 @@
+<% icons.each do |icon| -%>
+<div class="icon-item" data-icon="<%= escape(icon.name) %>">
+  <%= icon.to_svg %>
+  <div class="icon-name"><%= escape(icon.name) %></div>
+</div>
+<% end -%>

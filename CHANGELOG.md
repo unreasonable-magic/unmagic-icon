@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- New downloadable icon libraries: `coloured-icons` (full-colour brand/tech
+  logos), `bootstrap-icons`, `octicons`, `iconoir`, `material-design-icons`
+  (Pictogrammers @mdi), and `phosphor` (six weights flattened into one set)
+
 ## [0.1.0] - 2026-06-21
 
 ### Added

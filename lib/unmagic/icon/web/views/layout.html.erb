@@ -181,13 +181,38 @@
       padding: 40px;
       font-size: 14px;
     }
-    
+
+    .load-more-wrap {
+      display: flex;
+      justify-content: center;
+      margin: 30px 0 10px;
+    }
+
+    .load-more {
+      padding: 10px 24px;
+      background: var(--tab-bg);
+      border: 1px solid var(--tab-border);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--fg);
+    }
+
+    .load-more:hover {
+      background: var(--tab-hover);
+    }
+
+    .load-more:disabled {
+      cursor: default;
+      opacity: 0.6;
+    }
+
     [hidden] {
       display: none !important;
     }
   </style>
-  <link rel="icon" href="<%= url "/public/favicon.png" %>" type="image/png">
-  <link rel="apple-touch-icon" href="<%= url "/public/favicon.png" %>">
+  <link rel="icon" href="<%= asset_url "/public/favicon.png" %>" type="image/png">
+  <link rel="apple-touch-icon" href="<%= asset_url "/public/favicon.png" %>">
 </head>
 <body>
   <div class="header">
@@ -204,8 +229,12 @@
     </div>
     
     <div class="tabs">
+      <a href="<%= library_url(nil) %>"
+         class="tab <%= @selected_library.nil? ? 'active' : '' %>">
+        All (<%= @libraries.sum { |library| library.icons.length } %>)
+      </a>
       <% @libraries.each do |library| %>
-        <a href="<%= url(library.name, @request.params) %>" 
+        <a href="<%= library_url(library.name) %>"
            class="tab <%= library == @selected_library ? 'active' : '' %>">
           <%= library.name %> (<%= library.icons.length %>)
         </a>
@@ -214,57 +243,100 @@
   </div>
   
   <div class="stats" id="stats"></div>
-  
-  <div class="icon-grid" id="iconGrid"></div>
-  
+
+  <div class="icon-grid" id="iconGrid">
+    <% if @page_icons.empty? %>
+      <div class="no-results">No icons found</div>
+    <% else %>
+      <%= render_icons(@page_icons) %>
+    <% end %>
+  </div>
+
+  <div class="load-more-wrap" id="loadMoreWrap" hidden>
+    <button class="load-more" id="loadMore">Load more</button>
+  </div>
+
   <div class="copy-toast" id="copyToast">Copied to clipboard!</div>
   
   <script>
-    // Icon data for current library only
-    const currentLibrary = '<%= @selected_library.name %>';
-    const iconsData = <%= @selected_library.icons.to_json %>;
-    
-    // State
-    let searchQuery = '<%= @search_query %>';
-    
+    // The current selection and paging state. Icons themselves are rendered by
+    // the server (the `icons` partial); the browser only fetches more of them.
+    const libraryParam = <%= @selected_param.to_json %>;
+    const libraryLabel = <%= (@selected_library&.name || "All").to_json %>;
+    const pageSize = <%= Unmagic::Icon::Web::PAGE_SIZE %>;
+
+    let searchQuery = <%= @search_query.to_json %>;
+    let total = <%= @total %>;
+    let loadedOffset = <%= @offset %>;
+
     // Elements
     const searchInput = document.getElementById('searchInput');
     const iconGrid = document.getElementById('iconGrid');
     const stats = document.getElementById('stats');
     const copyToast = document.getElementById('copyToast');
     const themeSwitcher = document.getElementById('themeSwitcher');
-    
+    const loadMoreWrap = document.getElementById('loadMoreWrap');
+    const loadMoreBtn = document.getElementById('loadMore');
+
     // Functions
-    function filterIcons() {
-      const query = searchQuery.toLowerCase();
-      const filtered = query 
-        ? iconsData.filter(icon => icon.name.toLowerCase().includes(query))
-        : iconsData;
-      
-      renderIcons(filtered);
-      updateStats(filtered.length);
+    function renderedCount() {
+      return iconGrid.querySelectorAll('.icon-item').length;
     }
-    
-    function renderIcons(icons) {
-      if (icons.length === 0) {
-        iconGrid.innerHTML = '<div class="no-results">No icons found</div>';
-        return;
+
+    function updateStats() {
+      stats.textContent = `Showing ${renderedCount()} of ${total} icons from ${libraryLabel}`;
+    }
+
+    function updateLoadMore() {
+      loadMoreWrap.hidden = renderedCount() >= total;
+    }
+
+    // Build the URL for a page of rendered icon markup from the server.
+    function pageUrl(offset) {
+      const params = new URLSearchParams();
+      params.set('library', libraryParam);
+      if (searchQuery) params.set('search', searchQuery);
+      params.set('offset', offset);
+      params.set('format', 'fragment');
+      return window.location.pathname + '?' + params.toString();
+    }
+
+    let loading = false;
+    async function loadMore() {
+      if (loading) return;
+      loading = true;
+      loadMoreBtn.disabled = true;
+      loadMoreBtn.textContent = 'Loading…';
+      try {
+        const res = await fetch(pageUrl(loadedOffset + pageSize));
+        total = parseInt(res.headers.get('X-Total-Count'), 10);
+        loadedOffset = parseInt(res.headers.get('X-Offset'), 10);
+        iconGrid.insertAdjacentHTML('beforeend', await res.text());
+      } finally {
+        loading = false;
+        loadMoreBtn.disabled = false;
+        loadMoreBtn.textContent = 'Load more';
+        updateStats();
+        updateLoadMore();
       }
-      
-      iconGrid.innerHTML = icons.map(icon => {
-        return `
-          <div class="icon-item" data-icon="${icon.name}">
-            ${icon.svg}
-            <div class="icon-name">${icon.name}</div>
-          </div>
-        `;
-      }).join('');
     }
-    
-    function updateStats(count) {
-      stats.textContent = `Showing ${count} icons from ${currentLibrary}`;
+
+    // Live search: re-request the first page from the server. A sequence guard
+    // drops responses that arrive out of order while the user keeps typing.
+    let searchSeq = 0;
+    async function runSearch() {
+      const seq = ++searchSeq;
+      const res = await fetch(pageUrl(0));
+      const html = await res.text();
+      if (seq !== searchSeq) return;
+
+      total = parseInt(res.headers.get('X-Total-Count'), 10);
+      loadedOffset = 0;
+      iconGrid.innerHTML = html.trim() ? html : '<div class="no-results">No icons found</div>';
+      updateStats();
+      updateLoadMore();
     }
-    
+
     function copyIcon(iconName) {
       const text = `${iconName}`;
       navigator.clipboard.writeText(text).then(() => {
@@ -275,18 +347,26 @@
     }
     
     function updateURL() {
-      const params = new URLSearchParams();
+      // Preserve the current `library` selection, only swap `search`.
+      const params = new URLSearchParams(window.location.search);
       if (searchQuery) {
-        params.set('q', searchQuery);
+        params.set('search', searchQuery);
+      } else {
+        params.delete('search');
       }
       const queryString = params.toString();
       const newURL = window.location.pathname + (queryString ? '?' + queryString : '');
       window.history.replaceState({}, '', newURL);
-      
-      // Update all tab links with new query
+
+      // Keep the search query in sync across every tab link.
       document.querySelectorAll('.tab').forEach(tab => {
-        const href = tab.getAttribute('href').split('?')[0];
-        tab.setAttribute('href', href + (queryString ? '?' + queryString : ''));
+        const url = new URL(tab.href, window.location.origin);
+        if (searchQuery) {
+          url.searchParams.set('search', searchQuery);
+        } else {
+          url.searchParams.delete('search');
+        }
+        tab.setAttribute('href', url.pathname + url.search);
       });
     }
     
@@ -306,24 +386,29 @@
     }
     
     // Event listeners
+    let searchTimer = null;
     searchInput.addEventListener('input', (e) => {
       searchQuery = e.target.value;
-      filterIcons();
       updateURL();
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(runSearch, 200);
     });
-    
+
+    loadMoreBtn.addEventListener('click', loadMore);
+
     iconGrid.addEventListener('click', (e) => {
       const iconItem = e.target.closest('.icon-item');
       if (iconItem) {
         copyIcon(iconItem.dataset.icon);
       }
     });
-    
+
     themeSwitcher.addEventListener('click', toggleTheme);
-    
+
     // Initialize
     loadTheme();
-    filterIcons();
+    updateStats();
+    updateLoadMore();
   </script>
 </body>
 </html>

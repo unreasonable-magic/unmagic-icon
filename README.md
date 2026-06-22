@@ -127,6 +127,12 @@ Available libraries:
 | `simple-icons`        | Simple Icons        | SVG icons for popular brands                                                 |
 | `material-file-icons` | Material File Icons | Material Design file icons with filename/extension aliases                   |
 | `silk`                | Silk Icons Scalable | The classic silk icon set recreated as SVG                                   |
+| `coloured-icons`      | Coloured Icons      | Full-colour brand and technology logos                                       |
+| `bootstrap-icons`     | Bootstrap Icons     | Official open source SVG icon library for Bootstrap                          |
+| `octicons`            | Octicons            | Icons and icon font from GitHub                                              |
+| `iconoir`             | Iconoir             | Free open source icons designed on a 24x24 grid                             |
+| `material-design-icons` | Material Design Icons | 7400+ Material Design icons (Pictogrammers @mdi)                        |
+| `phosphor`            | Phosphor Icons      | Flexible icon family with six weights (thin to fill, plus duotone)           |
 
 ### Browsing icons
 
