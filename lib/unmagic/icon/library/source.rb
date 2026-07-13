@@ -6,7 +6,8 @@ require "json"
 require "pathname"
 require "fileutils"
 require "tmpdir"
-require "open3"
+require "zlib"
+require "rubygems/package"
 
 # Terminal progress is a nicety, not a requirement. The downloader runs fine
 # (with plain output) when these sibling gems aren't installed.
@@ -211,17 +212,74 @@ module Unmagic
           end
         end
 
+        # Pure-Ruby extraction — no `unzip`/`tar` binaries required, so this
+        # works in minimal containers (e.g. Rails' default slim Docker image).
         def extract_archive(archive_path, destination, type)
           case type
           when :zip
-            _, stderr, status = Open3.capture3("unzip", "-q", "-o", archive_path, "-d", destination)
-            raise ExtractionError, "Failed to extract zip: #{stderr}" unless status.success?
+            extract_zip(archive_path, destination)
           when :tgz, :tar
-            _, stderr, status = Open3.capture3("tar", "-xzf", archive_path, "-C", destination)
-            raise ExtractionError, "Failed to extract tar: #{stderr}" unless status.success?
+            extract_tar(archive_path, destination)
           else
             raise ExtractionError, "Unknown archive type: #{type}"
           end
+        end
+
+        def extract_zip(archive_path, destination)
+          require "zip"
+
+          Zip::File.open(archive_path) do |zip|
+            zip.each do |entry|
+              path = safe_extraction_path(entry.name, destination)
+
+              if entry.directory?
+                FileUtils.mkdir_p(path)
+              elsif entry.file?
+                FileUtils.mkdir_p(File.dirname(path))
+                entry.get_input_stream do |input|
+                  File.open(path, "wb") { |file| IO.copy_stream(input, file) }
+                end
+              end
+            end
+          end
+        rescue Zip::Error => e
+          raise ExtractionError, "Failed to extract zip: #{e.message}"
+        end
+
+        GZIP_MAGIC = "\x1f\x8b".b
+
+        def extract_tar(archive_path, destination)
+          File.open(archive_path, "rb") do |file|
+            stream = file.read(2) == GZIP_MAGIC ? Zlib::GzipReader.new(file.tap(&:rewind)) : file.tap(&:rewind)
+
+            Gem::Package::TarReader.new(stream) do |tar|
+              tar.each do |entry|
+                path = safe_extraction_path(entry.full_name, destination)
+
+                if entry.directory?
+                  FileUtils.mkdir_p(path)
+                elsif entry.file?
+                  FileUtils.mkdir_p(File.dirname(path))
+                  File.open(path, "wb") { |output| IO.copy_stream(entry, output) }
+                end
+              end
+            end
+          end
+        rescue Zlib::Error, Gem::Package::Error => e
+          raise ExtractionError, "Failed to extract tar: #{e.message}"
+        end
+
+        # Guards against zip-slip: entries like "../../etc/passwd" must not
+        # escape the extraction directory.
+        def safe_extraction_path(entry_name, destination)
+          destination = File.expand_path(destination)
+          path = File.expand_path(entry_name, destination)
+
+          unless path == destination || path.start_with?(destination + File::SEPARATOR)
+            raise ExtractionError, "Archive entry escapes extraction directory: #{entry_name}"
+          end
+
+          path
         end
 
         def count_svgs(directory)

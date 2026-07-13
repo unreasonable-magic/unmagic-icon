@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-07-14
+
+### Changed
+- Archives are now extracted in pure Ruby (rubyzip for zips, stdlib
+  `Gem::Package::TarReader`/`Zlib` for tarballs) instead of shelling out to
+  `unzip`/`tar`, so `unmagic:icons:install` works in minimal containers —
+  such as Rails' default slim Docker image — where those binaries aren't
+  installed. Extraction also guards against zip-slip path traversal.
+
+### Added
+- Runtime dependency on `rubyzip` (>= 2.3)
+
 ## [0.2.0] - 2026-06-22
 
 ### Added
@@ -41,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   hooks into `assets:precompile`) and `unmagic:icons:download[library]`
 - `Unmagic::Icon::Web`, a Rack app for browsing the configured icon libraries
 
-[Unreleased]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/unreasonable-magic/unmagic-icon/releases/tag/v0.1.0

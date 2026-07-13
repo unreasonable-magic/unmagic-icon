@@ -22,10 +22,11 @@ GIT
 PATH
   remote: .
   specs:
-    unmagic-icon (0.1.0)
+    unmagic-icon (0.2.1)
       activesupport (>= 7.0)
       nokogiri (>= 1.8.5)
       railties (>= 7.0)
+      rubyzip (>= 2.3)
 
 GEM
   remote: https://rubygems.org/
@@ -86,10 +87,14 @@ GEM
     loofah (2.24.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
+    mini_portile2 (2.8.9)
     minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
     nio4r (2.7.4)
+    nokogiri (1.18.9)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     nokogiri (1.18.9-aarch64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.18.9-aarch64-linux-musl)
@@ -193,6 +198,7 @@ GEM
       rubocop-performance (>= 1.24)
       rubocop-rails (>= 2.30)
     ruby-progressbar (1.13.0)
+    rubyzip (3.4.1)
     securerandom (0.4.1)
     stringio (3.1.7)
     thor (1.4.0)

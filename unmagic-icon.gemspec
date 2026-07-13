@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport", ">= 7.0"
   spec.add_dependency "railties", ">= 7.0"
   spec.add_dependency "nokogiri", ">= 1.8.5"
+  spec.add_dependency "rubyzip", ">= 2.3"
 
   spec.add_development_dependency "rspec", "~> 3.12"
   spec.add_development_dependency "rake", "~> 13.0"

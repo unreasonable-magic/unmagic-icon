@@ -99,4 +99,71 @@ RSpec.describe Unmagic::Icon::Library::Source do
       expect(library.find("whatever.unknown").name).to eq("material/file")
     end
   end
+
+  describe "#extract_archive" do
+    subject(:source) { Unmagic::Icon::Library::Source::Heroicons.new }
+
+    around do |example|
+      Dir.mktmpdir do |dir|
+        @dir = Pathname(dir)
+        @destination = @dir.join("out").tap(&:mkpath)
+        example.run
+      end
+    end
+
+    def extract(archive, type)
+      source.send(:extract_archive, archive.to_s, @destination.to_s, type)
+    end
+
+    def write_tgz(archive, entries)
+      File.open(archive, "wb") do |file|
+        Zlib::GzipWriter.wrap(file) do |gzip|
+          Gem::Package::TarWriter.new(gzip) do |tar|
+            entries.each do |name, contents|
+              tar.add_file_simple(name, 0o644, contents.bytesize) { |io| io.write(contents) }
+            end
+          end
+        end
+      end
+    end
+
+    it "extracts zip archives without shelling out" do
+      require "zip"
+
+      archive = @dir.join("icons.zip")
+      Zip::OutputStream.open(archive.to_s) do |zip|
+        zip.put_next_entry("icons/ruby.svg")
+        zip.write(FixtureHelpers::SAMPLE_SVG)
+      end
+
+      extract(archive, :zip)
+
+      expect(@destination.join("icons", "ruby.svg").read).to eq(FixtureHelpers::SAMPLE_SVG)
+    end
+
+    it "extracts gzipped tarballs without shelling out" do
+      archive = @dir.join("icons.tgz")
+      write_tgz(archive, "icons/ruby.svg" => FixtureHelpers::SAMPLE_SVG)
+
+      extract(archive, :tgz)
+
+      expect(@destination.join("icons", "ruby.svg").read).to eq(FixtureHelpers::SAMPLE_SVG)
+    end
+
+    it "refuses entries that escape the extraction directory" do
+      archive = @dir.join("evil.tgz")
+      write_tgz(archive, "../evil.svg" => FixtureHelpers::SAMPLE_SVG)
+
+      expect { extract(archive, :tgz) }.to raise_error(
+        Unmagic::Icon::Library::Source::ExtractionError, /escapes extraction directory/
+      )
+      expect(@dir.join("evil.svg")).not_to exist
+    end
+
+    it "raises on unknown archive types" do
+      expect { extract(@dir.join("whatever.rar"), :rar) }.to raise_error(
+        Unmagic::Icon::Library::Source::ExtractionError, /Unknown archive type/
+      )
+    end
+  end
 end
