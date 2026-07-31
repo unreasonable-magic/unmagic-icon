@@ -133,6 +133,7 @@ Available libraries:
 | `iconoir`             | Iconoir             | Free open source icons designed on a 24x24 grid                             |
 | `material-design-icons` | Material Design Icons | 7400+ Material Design icons (Pictogrammers @mdi)                        |
 | `phosphor`            | Phosphor Icons      | Flexible icon family with six weights (thin to fill, plus duotone)           |
+| `lobe-icons`          | Lobe Icons          | Popular AI / LLM model brand logos and icons                                 |
 
 ### Browsing icons
 
