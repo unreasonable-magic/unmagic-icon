@@ -135,7 +135,7 @@ Available libraries:
 | `phosphor`            | Phosphor Icons      | Flexible icon family with six weights (thin to fill, plus duotone)           |
 | `lobe-icons`          | Lobe Icons          | Popular AI / LLM model brand logos and icons                                 |
 | `svg-logos` | SVG Logos | Full-colour technology logos |
-| `dashboard-icons` | Dashboard Icons | Service logos with available light/dark variants |
+| `homarr-icons` | Homarr Dashboard Icons | Service logos with available light/dark variants |
 | `carbon-pictograms` | IBM Carbon Pictograms | IBM pictograms including IBM Cloud |
 | `aws-architecture-icons` | AWS Architecture Icons | Official 64px service SVGs; AWS usage terms apply |
 
@@ -144,7 +144,7 @@ Available libraries:
 | Key | Pinned source | Example references |
 | --- | --- | --- |
 | `svg-logos` | [gilbarbara/logos](https://github.com/gilbarbara/logos/tree/37a6b807fd71c622efea27a9309b5d4edc792969), commit `37a6b807fd71c622efea27a9309b5d4edc792969` | `svg-logos/microsoft-power-bi`, `svg-logos/aws-cloudformation` |
-| `dashboard-icons` | [homarr-labs/dashboard-icons](https://github.com/homarr-labs/dashboard-icons/tree/c716eb6798576923fa08e9b3e4125173148994ed), commit `c716eb6798576923fa08e9b3e4125173148994ed` | `dashboard-icons/powerbi`, `dashboard-icons/dagster-light`, `dashboard-icons/dagster-dark` |
+| `homarr-icons` | [homarr-labs/dashboard-icons](https://github.com/homarr-labs/dashboard-icons/tree/c716eb6798576923fa08e9b3e4125173148994ed), commit `c716eb6798576923fa08e9b3e4125173148994ed` | `homarr-icons/powerbi`, `homarr-icons/dagster-light`, `homarr-icons/dagster-dark` |
 | `carbon-pictograms` | [`@carbon/pictograms` 12.85.0](https://www.npmjs.com/package/@carbon/pictograms/v/12.85.0) | `carbon-pictograms/ibm--cloud` |
 | `aws-architecture-icons` | Official July 31, 2026 ZIP, SHA-256 verified | `aws-architecture-icons/Arch_AWS-CloudFormation_64` |
 
@@ -152,7 +152,7 @@ Install these through the same initializer and task as other libraries:
 
 ```ruby
 Unmagic::Icon.configure do |config|
-  config.libraries = [:"svg-logos", :"dashboard-icons", :"carbon-pictograms", :"aws-architecture-icons"]
+  config.libraries = [:"svg-logos", :"homarr-icons", :"carbon-pictograms", :"aws-architecture-icons"]
 end
 ```
 
@@ -160,7 +160,7 @@ end
 bin/rails unmagic:icons:install
 # Or individually:
 bin/rails 'unmagic:icons:download[svg-logos]'
-bin/rails 'unmagic:icons:download[dashboard-icons]'
+bin/rails 'unmagic:icons:download[homarr-icons]'
 bin/rails 'unmagic:icons:download[carbon-pictograms]'
 bin/rails 'unmagic:icons:download[aws-architecture-icons]'
 ```
@@ -168,9 +168,9 @@ bin/rails 'unmagic:icons:download[aws-architecture-icons]'
 ```erb
 <%= unmagic_icon "svg-logos/microsoft-power-bi", class: "size-6" %>
 <%= unmagic_icon "svg-logos/aws-cloudformation" %>
-<%= unmagic_icon "dashboard-icons/powerbi" %>
-<%= unmagic_icon "dashboard-icons/dagster-light" %>
-<%= unmagic_icon "dashboard-icons/dagster-dark" %>
+<%= unmagic_icon "homarr-icons/powerbi" %>
+<%= unmagic_icon "homarr-icons/dagster-light" %>
+<%= unmagic_icon "homarr-icons/dagster-dark" %>
 <%= unmagic_icon "carbon-pictograms/ibm--cloud" %>
 <%= unmagic_icon "aws-architecture-icons/Arch_AWS-CloudFormation_64" %>
 <%= unmagic_icon "aws-architecture-icons/Arch_AWS-Cloud-Development-Kit_64" %>
@@ -193,7 +193,7 @@ the IBM Cloud pictogram `svg/ibm--cloud.svg`. This integration selects the
 pictograms family, excludes `src/svg` duplicates and JavaScript, and preserves
 the double hyphen in its canonical name. The UI icons package is not installed.
 
-SVG Logos, Dashboard Icons, and Carbon retain the upstream license and README alongside the SVGs,
+SVG Logos, Homarr Dashboard Icons, and Carbon retain the upstream license and README alongside the SVGs,
 plus a `manifest.json` recording its source, exact revision/version and license.
 SVG Logos also retains `logos.json` with the original product identities and
 links. The downloader does not execute npm scripts or upstream code. Existing
@@ -209,7 +209,7 @@ legal files when redistributing them:
 - **SVG Logos:** [CC0-1.0](https://github.com/gilbarbara/logos/blob/37a6b807fd71c622efea27a9309b5d4edc792969/LICENSE.txt).
   The upstream README identifies logos as their respective owners' property;
   CC0 does not waive trademark rights or third-party rights.
-- **Dashboard Icons:** [Apache-2.0](https://github.com/homarr-labs/dashboard-icons/blob/c716eb6798576923fa08e9b3e4125173148994ed/LICENSE),
+- **Homarr Dashboard Icons:** [Apache-2.0](https://github.com/homarr-labs/dashboard-icons/blob/c716eb6798576923fa08e9b3e4125173148994ed/LICENSE),
   with copyright attribution to Bjorn Lammers, Meier Lukas, Thomas Camlong and
   Homarr Labs. Preserve the license and applicable notices; identify changes
   when distributing modified files. The README limits brand representations

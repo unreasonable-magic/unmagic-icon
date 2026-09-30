@@ -12,7 +12,7 @@ RSpec.describe "Brand library downloads" do
       root: "logos-37a6b807fd71c622efea27a9309b5d4edc792969", directory: "logos",
       icons: %w[microsoft-power-bi aws-cloudformation slim], notices: %w[LICENSE.txt README.md logos.json]
     },
-    "dashboard-icons" => {
+    "homarr-icons" => {
       root: "dashboard-icons-c716eb6798576923fa08e9b3e4125173148994ed", directory: "svg",
       icons: %w[dagster-light dagster-dark powerbi], notices: %w[LICENSE README.md]
     },
@@ -151,11 +151,11 @@ RSpec.describe "Brand library downloads" do
   it "preserves existing references and does not infer misleading product aliases" do
     write_svgs(@base.join("lucide"), "check")
     write_svgs(@base.join("svg-logos"), "slim", "microsoft", "aws")
-    write_svgs(@base.join("dashboard-icons"), "dagster-light", "dagster-dark")
+    write_svgs(@base.join("homarr-icons"), "dagster-light", "dagster-dark")
     use_icon_paths(@base)
     expect(Unmagic::Icon.find("lucide/check").render).to include('data-unmagic-icon="lucide/check"')
     expect(Unmagic::Icon.find("svg-logos/slim").name).to eq("svg-logos/slim")
-    %w[svg-logos/ruby-slim svg-logos/powerbi svg-logos/cloudformation dashboard-icons/dagster].each do |reference|
+    %w[svg-logos/ruby-slim svg-logos/powerbi svg-logos/cloudformation homarr-icons/dagster].each do |reference|
       expect { Unmagic::Icon.find(reference) }.to raise_error(Unmagic::Icon::IconNotFoundError)
     end
   end

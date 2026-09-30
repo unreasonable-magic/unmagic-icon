@@ -4,12 +4,12 @@ module Unmagic
   class Icon
     class Library
       class Source
-        class DashboardIcons < Source
+        class HomarrIcons < Source
           REVISION = "c716eb6798576923fa08e9b3e4125173148994ed"
           ROOT = "dashboard-icons-#{REVISION}"
 
-          key :"dashboard-icons"
-          title "Dashboard Icons"
+          key :"homarr-icons"
+          title "Homarr Dashboard Icons"
           description "Dashboard service logos from Homarr Labs, including light/dark variants"
           url "https://codeload.github.com/homarr-labs/dashboard-icons/tar.gz/#{REVISION}"
           archive :tgz
