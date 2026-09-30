@@ -280,17 +280,6 @@ bundle install
 bundle exec rake spec
 ```
 
-To replay the brand-library browser demo (downloads on first run):
-
-```bash
-bundle exec rackup demo/brand_icons.ru -p 5701 -o 127.0.0.1
-```
-
-Open `http://localhost:5701/demo` and click **Replay**. The ten steps check
-Power BI, CloudFormation, CDK, the distinct SageMaker products, Dagster in both
-themes, IBM Cloud, and the existing
-`lucide/check` reference through the gallery.
-
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at
