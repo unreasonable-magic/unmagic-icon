@@ -134,6 +134,133 @@ Available libraries:
 | `material-design-icons` | Material Design Icons | 7400+ Material Design icons (Pictogrammers @mdi)                        |
 | `phosphor`            | Phosphor Icons      | Flexible icon family with six weights (thin to fill, plus duotone)           |
 | `lobe-icons`          | Lobe Icons          | Popular AI / LLM model brand logos and icons                                 |
+| `gilbarbara-logos` | Gil Barbara SVG Logos | Full-colour technology logos |
+| `homarr-icons` | Homarr Dashboard Icons | Service logos with available light/dark variants |
+| `carbon-pictograms` | IBM Carbon Pictograms | IBM pictograms including IBM Cloud |
+| `aws-architecture-icons` | AWS Architecture Icons | Official 64px service SVGs; AWS usage terms apply |
+
+### Brand and cloud libraries
+
+| Key | Pinned source | Example references |
+| --- | --- | --- |
+| `gilbarbara-logos` | [gilbarbara/logos](https://github.com/gilbarbara/logos/tree/37a6b807fd71c622efea27a9309b5d4edc792969), commit `37a6b807fd71c622efea27a9309b5d4edc792969` | `gilbarbara-logos/microsoft-power-bi`, `gilbarbara-logos/aws-cloudformation` |
+| `homarr-icons` | [homarr-labs/dashboard-icons](https://github.com/homarr-labs/dashboard-icons/tree/c716eb6798576923fa08e9b3e4125173148994ed), commit `c716eb6798576923fa08e9b3e4125173148994ed` | `homarr-icons/powerbi`, `homarr-icons/dagster-light`, `homarr-icons/dagster-dark` |
+| `carbon-pictograms` | [`@carbon/pictograms` 12.85.0](https://www.npmjs.com/package/@carbon/pictograms/v/12.85.0) | `carbon-pictograms/ibm--cloud` |
+| `aws-architecture-icons` | Official July 31, 2026 ZIP, SHA-256 verified | `aws-architecture-icons/Arch_AWS-CloudFormation_64` |
+
+Install these through the same initializer and task as other libraries:
+
+```ruby
+Unmagic::Icon.configure do |config|
+  config.libraries = [:"gilbarbara-logos", :"homarr-icons", :"carbon-pictograms", :"aws-architecture-icons"]
+end
+```
+
+```bash
+bin/rails unmagic:icons:install
+# Or individually:
+bin/rails 'unmagic:icons:download[gilbarbara-logos]'
+bin/rails 'unmagic:icons:download[homarr-icons]'
+bin/rails 'unmagic:icons:download[carbon-pictograms]'
+bin/rails 'unmagic:icons:download[aws-architecture-icons]'
+```
+
+```erb
+<%= unmagic_icon "gilbarbara-logos/microsoft-power-bi", class: "size-6" %>
+<%= unmagic_icon "gilbarbara-logos/aws-cloudformation" %>
+<%= unmagic_icon "homarr-icons/powerbi" %>
+<%= unmagic_icon "homarr-icons/dagster-light" %>
+<%= unmagic_icon "homarr-icons/dagster-dark" %>
+<%= unmagic_icon "carbon-pictograms/ibm--cloud" %>
+<%= unmagic_icon "aws-architecture-icons/Arch_AWS-CloudFormation_64" %>
+<%= unmagic_icon "aws-architecture-icons/Arch_AWS-Cloud-Development-Kit_64" %>
+<%= unmagic_icon "aws-architecture-icons/Arch_Amazon-SageMaker_64" %>
+<%= unmagic_icon "aws-architecture-icons/Arch_Amazon-SageMaker-AI_64" %>
+```
+
+Names retain upstream spelling, case, punctuation, and variant suffixes. Select
+light/dark assets explicitly; no automatic theme or product aliases are added.
+SVG Logos' `slim` identifies the [Slim PHP framework](https://www.slimframework.com/),
+**not** the Ruby template language. Unknown products raise instead of falling
+back to a parent-company logo.
+
+Downloads copy `logos/*.svg`, `svg/*.svg`, and `package/svg/*.svg`, respectively,
+into their library directories. Dashboard's archive also contains PNG/WebP and
+website assets (a large download); only its top-level SVG assets are installed.
+Carbon's `@carbon/icons` 11.89.0 and `@carbon/pictograms` 12.85.0 packages were
+both inspected: the former has a UI-sized `svg/32/ibm-cloud.svg`; the latter has
+the IBM Cloud pictogram `svg/ibm--cloud.svg`. This integration selects the
+pictograms family, excludes `src/svg` duplicates and JavaScript, and preserves
+the double hyphen in its canonical name. The UI icons package is not installed.
+
+SVG Logos, Homarr Dashboard Icons, and Carbon retain the upstream license and README alongside the SVGs,
+plus a `manifest.json` recording its source, exact revision/version and license.
+SVG Logos also retains `logos.json` with the original product identities and
+links. The downloader does not execute npm scripts or upstream code. Existing
+libraries and saved references are unchanged; rendering uses the same inline
+SVG pipeline. As with existing libraries, downloaded SVGs are trusted assets,
+not sanitized untrusted uploads.
+
+#### Attribution and redistribution
+
+These assets are not covered by this gem's MIT license. Keep the downloaded
+legal files when redistributing them:
+
+- **SVG Logos:** [CC0-1.0](https://github.com/gilbarbara/logos/blob/37a6b807fd71c622efea27a9309b5d4edc792969/LICENSE.txt).
+  The upstream README identifies logos as their respective owners' property;
+  CC0 does not waive trademark rights or third-party rights.
+- **Homarr Dashboard Icons:** [Apache-2.0](https://github.com/homarr-labs/dashboard-icons/blob/c716eb6798576923fa08e9b3e4125173148994ed/LICENSE),
+  with copyright attribution to Bjorn Lammers, Meier Lukas, Thomas Camlong and
+  Homarr Labs. Preserve the license and applicable notices; identify changes
+  when distributing modified files. The README limits brand representations
+  to identification and disclaims endorsement.
+- **IBM Carbon Pictograms:** Apache-2.0, as shipped in the pinned package's
+  `LICENSE` and `README.md`. Preserve these and applicable copyright notices;
+  identify modifications. Apache-2.0 does not grant general trademark rights.
+
+Neither pinned Apache archive contains a separate `NOTICE` file. SVG bytes are
+copied unchanged; rendering adds the gem's normal wrapper attributes. If you
+redistribute rendered or otherwise modified assets, retain the license and
+applicable notices and identify your modifications.
+
+#### AWS Architecture Icons
+
+The `aws-architecture-icons` downloader fetches the official July 31, 2026 ZIP
+directly from AWS. It verifies SHA-256
+`d2d166c453526471749d520e0db022c459abef759d2946cf2dd1d1c992dc6526`
+before extraction and installs only `Architecture-Service-Icons_07312026/Arch_*/64/*.svg`.
+Upstream filenames and SVG bytes remain unchanged. Other sizes, resource icons,
+category icons, raster files, and macOS metadata are excluded.
+
+AWS assets are proprietary. The [AWS Architecture Icons](https://aws.amazon.com/architecture/icons/)
+page permits customers and partners to use them in architecture diagrams and
+related materials. The [AWS Site Terms](https://aws.amazon.com/terms/) and
+[AWS Intellectual Property License](https://aws.amazon.com/legal/aws-ip-license-terms/)
+apply; downloading through this gem does not grant general redistribution or
+trademark rights. No separate license file is included in the archive. The
+installer writes `ATTRIBUTION.txt` with AWS ownership, source and terms links,
+usage constraints and the extraction/rendering changes, plus provenance in
+`manifest.json`. No AWS assets are bundled in the gem. Check AWS's terms for
+your intended use, especially before redistributing an icon pack.
+
+The inspected [official archive](https://d1.awsstatic.com/onedam/marketing-channels/website/public/shared/architecture-icon-release/Icon-package_07312026.5846e92413caa21490223536cc97f1269e44fa92.zip)
+contains the following distinct service SVGs under
+`Architecture-Service-Icons_07312026/`:
+
+| Product | Category / exact filename |
+| --- | --- |
+| CloudFormation | `Arch_Management-Tools/64/Arch_AWS-CloudFormation_64.svg` |
+| AWS Cloud Development Kit | `Arch_Developer-Tools/64/Arch_AWS-Cloud-Development-Kit_64.svg` |
+| Amazon SageMaker | `Arch_Analytics/64/Arch_Amazon-SageMaker_64.svg` |
+| Amazon SageMaker AI | `Arch_Artificial-Intelligence/64/Arch_Amazon-SageMaker-AI_64.svg` |
+| Amazon SageMaker Studio Lab | `Arch_Artificial-Intelligence/64/Arch_Amazon-SageMaker-Studio-Lab_64.svg` |
+| Amazon SageMaker Ground Truth | `Arch_Artificial-Intelligence/64/Arch_Amazon-SageMaker-Ground-Truth_64.svg` |
+
+Each filename above is installed at `aws-architecture-icons/<filename-without-.svg>`.
+For example, Studio Lab is `aws-architecture-icons/Arch_Amazon-SageMaker-Studio-Lab_64`
+and Ground Truth is `aws-architecture-icons/Arch_Amazon-SageMaker-Ground-Truth_64`.
+SageMaker and SageMaker AI remain distinct, with no ambiguous `sagemaker` alias
+or fallback to AWS's company logo. Source and licensing review: 2026-09-30.
 
 ### Browsing icons
 
