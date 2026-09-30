@@ -2,6 +2,6 @@
 
 module Unmagic
   class Icon
-    VERSION = "0.3.0"
+    VERSION = "0.3.1"
   end
 end

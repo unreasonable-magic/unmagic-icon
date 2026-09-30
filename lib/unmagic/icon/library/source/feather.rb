@@ -8,9 +8,9 @@ module Unmagic
           key :feather
           title "Feather Icons"
           description "Simply beautiful open source icons"
-          url "https://github.com/feathericons/feather/archive/refs/tags/v4.29.1.zip"
+          url "https://github.com/feathericons/feather/archive/refs/tags/v4.29.2.zip"
           archive :zip
-          extract "feather-4.29.1/icons/*.svg"
+          extract "feather-4.29.2/icons/*.svg"
         end
       end
     end

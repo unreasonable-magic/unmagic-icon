@@ -7,10 +7,15 @@ module Unmagic
         class Tabler < Source
           key :tabler
           title "Tabler Icons"
-          description "Over 5400 free SVG icons"
-          url "https://github.com/tabler/tabler-icons/releases/download/v3.24.0/tabler-icons-3.24.0.zip"
-          archive :zip
-          extract "svg/*.svg"
+          description "Free SVG icons in outline and filled styles"
+          url "https://registry.npmjs.org/@tabler/icons/-/icons-3.48.0.tgz"
+          archive :tgz
+          # Keep outline names at tabler/<name>; filled icons live separately
+          # because both styles share filenames.
+          extract_into(
+            "package/icons/outline" => ".",
+            "package/icons/filled" => "filled"
+          )
         end
       end
     end

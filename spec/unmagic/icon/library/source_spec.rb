@@ -100,6 +100,25 @@ RSpec.describe Unmagic::Icon::Library::Source do
     end
   end
 
+  describe Unmagic::Icon::Library::Source::Tabler do
+    it "keeps outline names and separates filled icons with the same name" do
+      Dir.mktmpdir do |dir|
+        root = Pathname(dir)
+        %w[outline filled].each do |style|
+          path = root.join("package", "icons", style).tap(&:mkpath)
+          path.join("star.svg").write(FixtureHelpers::SAMPLE_SVG.sub("<svg", "<svg data-style=\"#{style}\""))
+        end
+        target = root.join("output").tap(&:mkpath)
+
+        described_class.new.send(:copy_assets, root.to_s, target)
+
+        expect(target.join("star.svg").read).to include('data-style="outline"')
+        expect(target.join("filled", "star.svg").read).to include('data-style="filled"')
+        expect(Dir[target.join("**/*.svg")].size).to eq(2)
+      end
+    end
+  end
+
   describe "#extract_archive" do
     subject(:source) { Unmagic::Icon::Library::Source::Heroicons.new }
 

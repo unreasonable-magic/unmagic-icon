@@ -122,7 +122,7 @@ Available libraries:
 | `heroicons`           | Heroicons           | Beautiful hand-crafted SVG icons by the makers of Tailwind CSS               |
 | `devicons`            | Devicons            | Icons representing programming languages, designing & development tools      |
 | `feather`             | Feather Icons       | Simply beautiful open source icons                                           |
-| `tabler`              | Tabler Icons        | Over 5400 free SVG icons                                                     |
+| `tabler`              | Tabler Icons        | Outline icons at `tabler/name`, filled icons at `tabler/filled/name`           |
 | `lucide`              | Lucide Icons        | Beautiful & consistent icons                                                 |
 | `simple-icons`        | Simple Icons        | SVG icons for popular brands                                                 |
 | `material-file-icons` | Material File Icons | Material Design file icons with filename/extension aliases                   |

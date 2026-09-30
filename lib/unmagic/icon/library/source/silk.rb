@@ -12,7 +12,7 @@ module Unmagic
           description "The classic silk icon set recreated as SVG"
 
           REPO = "frhun/silk-icon-scalable"
-          BRANCH = "main"
+          BRANCH = "master"
           PATHS = [ "baseicons", "extra" ].freeze
 
           private

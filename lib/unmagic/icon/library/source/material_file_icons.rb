@@ -11,7 +11,7 @@ module Unmagic
           key :"material-file-icons"
           title "Material File Icons"
           description "Material Design file icons with filename/extension aliases (PKief material-icon-theme)"
-          url "https://registry.npmjs.org/material-icon-theme/-/material-icon-theme-5.35.0.tgz"
+          url "https://registry.npmjs.org/material-icon-theme/-/material-icon-theme-5.38.1.tgz"
           archive :tgz
           dir "material"
           extract "package/icons/*.svg"

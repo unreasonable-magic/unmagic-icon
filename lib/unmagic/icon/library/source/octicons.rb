@@ -7,10 +7,10 @@ module Unmagic
           key :octicons
           title "Octicons"
           description "Icons and icon font from GitHub"
-          url "https://github.com/primer/octicons/archive/refs/tags/v19.28.1.zip"
-          archive :zip
+          url "https://registry.npmjs.org/@primer/octicons/-/octicons-19.38.0.tgz"
+          archive :tgz
           dir "octicons"
-          extract "octicons-19.28.1/icons/*.svg"
+          extract "package/build/svg/*.svg"
         end
       end
     end

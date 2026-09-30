@@ -13,7 +13,7 @@ module Unmagic
           key :"lobe-icons"
           title "Lobe Icons"
           description "Popular AI / LLM model brand logos and icons"
-          url "https://registry.npmjs.org/@lobehub/icons-static-svg/-/icons-static-svg-1.94.0.tgz"
+          url "https://registry.npmjs.org/@lobehub/icons-static-svg/-/icons-static-svg-1.95.1.tgz"
           archive :tgz
           dir "lobe-icons"
           extract "package/icons/*.svg"

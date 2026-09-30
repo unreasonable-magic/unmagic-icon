@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-09-30
+
+### Changed
+- Update Feather to 4.29.2, Tabler to 3.48.0, Lucide to 1.49.0,
+  Simple Icons to 16.33.0, Material File Icons to 5.38.1, Octicons to
+  19.38.0, Iconoir to 7.12.1, and Lobe Icons to 1.95.1.
+- Download Tabler and Octicons from their official npm SVG packages.
+
+### Fixed
+- Extract Tabler's nested SVG directories, with outline icons at `tabler/name`
+  and filled variants at `tabler/filled/name`, avoiding filename collisions.
+- Download Silk from its existing `master` branch.
+
 ## [0.3.0] - 2026-07-31
 
 ### Added
@@ -59,7 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   hooks into `assets:precompile`) and `unmagic:icons:download[library]`
 - `Unmagic::Icon::Web`, a Rack app for browsing the configured icon libraries
 
-[Unreleased]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.1.0...v0.2.0

@@ -8,7 +8,7 @@ module Unmagic
           key :"simple-icons"
           title "Simple Icons"
           description "SVG icons for popular brands"
-          url "https://registry.npmjs.org/simple-icons/-/simple-icons-14.2.0.tgz"
+          url "https://registry.npmjs.org/simple-icons/-/simple-icons-16.33.0.tgz"
           archive :tgz
           extract "package/icons/*.svg"
         end
