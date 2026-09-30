@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-09-30
+
+### Added
+- Four pinned downloadable icon libraries: `gilbarbara-logos` (Gil Barbara SVG
+  Logos), `homarr-icons` (Homarr Dashboard Icons), `carbon-pictograms` (IBM
+  Carbon Pictograms), and `aws-architecture-icons` (official AWS service icons).
+- Product-specific references for Microsoft Power BI, Dagster, IBM Cloud,
+  CloudFormation, AWS Cloud Development Kit, and distinct SageMaker products.
+  Preserve available Homarr light/dark variants and upstream filenames.
+- Retain upstream license/README files and source provenance for the new
+  open-source libraries; fail downloads when required attribution is missing.
+- Verify the pinned AWS archive with SHA-256 and retain AWS attribution and
+  usage terms. Install 64px service SVGs; AWS assets remain proprietary and
+  are downloaded directly rather than bundled in the gem.
+- Installation examples, source pins, and licensing guidance for the new sets.
+
 ## [0.3.1] - 2026-09-30
 
 ### Changed
@@ -72,7 +88,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   hooks into `assets:precompile`) and `unmagic:icons:download[library]`
 - `Unmagic::Icon::Web`, a Rack app for browsing the configured icon libraries
 
-[Unreleased]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/unreasonable-magic/unmagic-icon/compare/v0.2.0...v0.2.1
