@@ -134,7 +134,7 @@ Available libraries:
 | `material-design-icons` | Material Design Icons | 7400+ Material Design icons (Pictogrammers @mdi)                        |
 | `phosphor`            | Phosphor Icons      | Flexible icon family with six weights (thin to fill, plus duotone)           |
 | `lobe-icons`          | Lobe Icons          | Popular AI / LLM model brand logos and icons                                 |
-| `svg-logos` | SVG Logos | Full-colour technology logos |
+| `gilbarbara-logos` | Gil Barbara SVG Logos | Full-colour technology logos |
 | `homarr-icons` | Homarr Dashboard Icons | Service logos with available light/dark variants |
 | `carbon-pictograms` | IBM Carbon Pictograms | IBM pictograms including IBM Cloud |
 | `aws-architecture-icons` | AWS Architecture Icons | Official 64px service SVGs; AWS usage terms apply |
@@ -143,7 +143,7 @@ Available libraries:
 
 | Key | Pinned source | Example references |
 | --- | --- | --- |
-| `svg-logos` | [gilbarbara/logos](https://github.com/gilbarbara/logos/tree/37a6b807fd71c622efea27a9309b5d4edc792969), commit `37a6b807fd71c622efea27a9309b5d4edc792969` | `svg-logos/microsoft-power-bi`, `svg-logos/aws-cloudformation` |
+| `gilbarbara-logos` | [gilbarbara/logos](https://github.com/gilbarbara/logos/tree/37a6b807fd71c622efea27a9309b5d4edc792969), commit `37a6b807fd71c622efea27a9309b5d4edc792969` | `gilbarbara-logos/microsoft-power-bi`, `gilbarbara-logos/aws-cloudformation` |
 | `homarr-icons` | [homarr-labs/dashboard-icons](https://github.com/homarr-labs/dashboard-icons/tree/c716eb6798576923fa08e9b3e4125173148994ed), commit `c716eb6798576923fa08e9b3e4125173148994ed` | `homarr-icons/powerbi`, `homarr-icons/dagster-light`, `homarr-icons/dagster-dark` |
 | `carbon-pictograms` | [`@carbon/pictograms` 12.85.0](https://www.npmjs.com/package/@carbon/pictograms/v/12.85.0) | `carbon-pictograms/ibm--cloud` |
 | `aws-architecture-icons` | Official July 31, 2026 ZIP, SHA-256 verified | `aws-architecture-icons/Arch_AWS-CloudFormation_64` |
@@ -152,22 +152,22 @@ Install these through the same initializer and task as other libraries:
 
 ```ruby
 Unmagic::Icon.configure do |config|
-  config.libraries = [:"svg-logos", :"homarr-icons", :"carbon-pictograms", :"aws-architecture-icons"]
+  config.libraries = [:"gilbarbara-logos", :"homarr-icons", :"carbon-pictograms", :"aws-architecture-icons"]
 end
 ```
 
 ```bash
 bin/rails unmagic:icons:install
 # Or individually:
-bin/rails 'unmagic:icons:download[svg-logos]'
+bin/rails 'unmagic:icons:download[gilbarbara-logos]'
 bin/rails 'unmagic:icons:download[homarr-icons]'
 bin/rails 'unmagic:icons:download[carbon-pictograms]'
 bin/rails 'unmagic:icons:download[aws-architecture-icons]'
 ```
 
 ```erb
-<%= unmagic_icon "svg-logos/microsoft-power-bi", class: "size-6" %>
-<%= unmagic_icon "svg-logos/aws-cloudformation" %>
+<%= unmagic_icon "gilbarbara-logos/microsoft-power-bi", class: "size-6" %>
+<%= unmagic_icon "gilbarbara-logos/aws-cloudformation" %>
 <%= unmagic_icon "homarr-icons/powerbi" %>
 <%= unmagic_icon "homarr-icons/dagster-light" %>
 <%= unmagic_icon "homarr-icons/dagster-dark" %>

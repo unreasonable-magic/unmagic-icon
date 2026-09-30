@@ -4,12 +4,12 @@ module Unmagic
   class Icon
     class Library
       class Source
-        class SvgLogos < Source
+        class GilbarbaraLogos < Source
           REVISION = "37a6b807fd71c622efea27a9309b5d4edc792969"
           ROOT = "logos-#{REVISION}"
 
-          key :"svg-logos"
-          title "SVG Logos"
+          key :"gilbarbara-logos"
+          title "Gil Barbara SVG Logos"
           description "Full-colour technology logos curated by Gil Barbara"
           url "https://codeload.github.com/gilbarbara/logos/tar.gz/#{REVISION}"
           archive :tgz
