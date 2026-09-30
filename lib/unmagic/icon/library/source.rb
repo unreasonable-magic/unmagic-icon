@@ -85,6 +85,15 @@ module Unmagic
           def extract_into(mapping = nil)
             mapping ? @extract_into = mapping : @extract_into
           end
+
+          # Required upstream legal files, copied alongside the icons unchanged.
+          def notices(*patterns)
+            patterns.empty? ? (@notices || []) : @notices = patterns
+          end
+
+          def provenance(value = nil)
+            value ? @provenance = value : @provenance
+          end
         end
 
         def download(target_dir: default_target_dir, force: false)
@@ -120,15 +129,26 @@ module Unmagic
             download_file(self.class.url, archive_path)
             extract_archive(archive_path, tmpdir, self.class.archive)
 
+            notice_files = self.class.notices.map do |pattern|
+              matches = Dir.glob(File.join(tmpdir, pattern)).select { |file| File.file?(file) }
+              raise ExtractionError, "Missing required attribution: #{pattern}" if matches.empty?
+
+              matches
+            end.flatten
             FileUtils.mkdir_p(target_dir)
+            notice_files.each { |file| FileUtils.cp(file, target_dir) }
             copy_assets(tmpdir, target_dir)
             write_manifest(tmpdir, target_dir)
           end
         end
 
-        # Libraries that ship a file→icon mapping override this to write a
-        # manifest.json into target_dir. Default: nothing.
-        def write_manifest(_tmpdir, _target_dir)
+        # Record opt-in provenance; libraries with file→icon mappings can
+        # override this to write their own manifest.json.
+        def write_manifest(_tmpdir, target_dir)
+          return unless self.class.provenance
+
+          manifest = self.class.provenance.merge("name" => self.class.dir, "archive" => self.class.url)
+          File.write(Pathname(target_dir).join("manifest.json"), JSON.pretty_generate(manifest))
         end
 
         def copy_assets(tmpdir, target_dir)
@@ -305,3 +325,6 @@ require_relative "source/iconoir"
 require_relative "source/material_design_icons"
 require_relative "source/phosphor"
 require_relative "source/lobe_icons"
+require_relative "source/svg_logos"
+require_relative "source/dashboard_icons"
+require_relative "source/carbon_pictograms"

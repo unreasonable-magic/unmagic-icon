@@ -134,6 +134,118 @@ Available libraries:
 | `material-design-icons` | Material Design Icons | 7400+ Material Design icons (Pictogrammers @mdi)                        |
 | `phosphor`            | Phosphor Icons      | Flexible icon family with six weights (thin to fill, plus duotone)           |
 | `lobe-icons`          | Lobe Icons          | Popular AI / LLM model brand logos and icons                                 |
+| `svg-logos` | SVG Logos | Full-colour technology logos |
+| `dashboard-icons` | Dashboard Icons | Service logos with available light/dark variants |
+| `carbon-pictograms` | IBM Carbon Pictograms | IBM pictograms including IBM Cloud |
+
+### Brand and cloud libraries
+
+| Key | Pinned source | Example references |
+| --- | --- | --- |
+| `svg-logos` | [gilbarbara/logos](https://github.com/gilbarbara/logos/tree/37a6b807fd71c622efea27a9309b5d4edc792969), commit `37a6b807fd71c622efea27a9309b5d4edc792969` | `svg-logos/microsoft-power-bi`, `svg-logos/aws-cloudformation` |
+| `dashboard-icons` | [homarr-labs/dashboard-icons](https://github.com/homarr-labs/dashboard-icons/tree/c716eb6798576923fa08e9b3e4125173148994ed), commit `c716eb6798576923fa08e9b3e4125173148994ed` | `dashboard-icons/powerbi`, `dashboard-icons/dagster-light`, `dashboard-icons/dagster-dark` |
+| `carbon-pictograms` | [`@carbon/pictograms` 12.85.0](https://www.npmjs.com/package/@carbon/pictograms/v/12.85.0) | `carbon-pictograms/ibm--cloud` |
+
+Install these through the same initializer and task as other libraries:
+
+```ruby
+Unmagic::Icon.configure do |config|
+  config.libraries = [:"svg-logos", :"dashboard-icons", :"carbon-pictograms"]
+end
+```
+
+```bash
+bin/rails unmagic:icons:install
+# Or individually:
+bin/rails 'unmagic:icons:download[svg-logos]'
+bin/rails 'unmagic:icons:download[dashboard-icons]'
+bin/rails 'unmagic:icons:download[carbon-pictograms]'
+```
+
+```erb
+<%= unmagic_icon "svg-logos/microsoft-power-bi", class: "size-6" %>
+<%= unmagic_icon "svg-logos/aws-cloudformation" %>
+<%= unmagic_icon "dashboard-icons/powerbi" %>
+<%= unmagic_icon "dashboard-icons/dagster-light" %>
+<%= unmagic_icon "dashboard-icons/dagster-dark" %>
+<%= unmagic_icon "carbon-pictograms/ibm--cloud" %>
+```
+
+Names retain upstream spelling, case, punctuation, and variant suffixes. Select
+light/dark assets explicitly; no automatic theme or product aliases are added.
+SVG Logos' `slim` identifies the [Slim PHP framework](https://www.slimframework.com/),
+**not** the Ruby template language. Unknown products raise instead of falling
+back to a parent-company logo.
+
+Downloads copy `logos/*.svg`, `svg/*.svg`, and `package/svg/*.svg`, respectively,
+into their library directories. Dashboard's archive also contains PNG/WebP and
+website assets (a large download); only its top-level SVG assets are installed.
+Carbon's `@carbon/icons` 11.89.0 and `@carbon/pictograms` 12.85.0 packages were
+both inspected: the former has a UI-sized `svg/32/ibm-cloud.svg`; the latter has
+the IBM Cloud pictogram `svg/ibm--cloud.svg`. This integration selects the
+pictograms family, excludes `src/svg` duplicates and JavaScript, and preserves
+the double hyphen in its canonical name. The UI icons package is not installed.
+
+Each new library retains the upstream license and README alongside the SVGs,
+plus a `manifest.json` recording its source, exact revision/version and license.
+SVG Logos also retains `logos.json` with the original product identities and
+links. The downloader does not execute npm scripts or upstream code. Existing
+libraries and saved references are unchanged; rendering uses the same inline
+SVG pipeline. As with existing libraries, downloaded SVGs are trusted assets,
+not sanitized untrusted uploads.
+
+#### Attribution and redistribution
+
+These assets are not covered by this gem's MIT license. Keep the downloaded
+legal files when redistributing them:
+
+- **SVG Logos:** [CC0-1.0](https://github.com/gilbarbara/logos/blob/37a6b807fd71c622efea27a9309b5d4edc792969/LICENSE.txt).
+  The upstream README identifies logos as their respective owners' property;
+  CC0 does not waive trademark rights or third-party rights.
+- **Dashboard Icons:** [Apache-2.0](https://github.com/homarr-labs/dashboard-icons/blob/c716eb6798576923fa08e9b3e4125173148994ed/LICENSE),
+  with copyright attribution to Bjorn Lammers, Meier Lukas, Thomas Camlong and
+  Homarr Labs. Preserve the license and applicable notices; identify changes
+  when distributing modified files. The README limits brand representations
+  to identification and disclaims endorsement.
+- **IBM Carbon Pictograms:** Apache-2.0, as shipped in the pinned package's
+  `LICENSE` and `README.md`. Preserve these and applicable copyright notices;
+  identify modifications. Apache-2.0 does not grant general trademark rights.
+
+Neither pinned Apache archive contains a separate `NOTICE` file. SVG bytes are
+copied unchanged; rendering adds the gem's normal wrapper attributes. If you
+redistribute rendered or otherwise modified assets, retain the license and
+applicable notices and identify your modifications.
+
+#### AWS Architecture Icons — currently unsupported
+
+The official [AWS Architecture Icons](https://aws.amazon.com/architecture/icons/)
+page permits customers and partners to use the assets for architecture diagrams
+and related materials. The [AWS Site Terms](https://aws.amazon.com/terms/) and
+[AWS Intellectual Property License](https://aws.amazon.com/legal/aws-ip-license-terms/)
+do not establish a general redistribution grant for an icon library. No separate
+license/notice was found in the official July 31, 2026 archive. Therefore this
+gem does **not** register an `aws-architecture-icons` downloader or bundle its
+assets. Obtain appropriate permission before redistributing an AWS icon pack;
+permitted diagram use is not a blanket open-source asset license.
+
+The inspected [official archive](https://d1.awsstatic.com/onedam/marketing-channels/website/public/shared/architecture-icon-release/Icon-package_07312026.5846e92413caa21490223536cc97f1269e44fa92.zip)
+contains the following distinct service SVGs under
+`Architecture-Service-Icons_07312026/`:
+
+| Product | Category / exact filename |
+| --- | --- |
+| CloudFormation | `Arch_Management-Tools/64/Arch_AWS-CloudFormation_64.svg` |
+| AWS Cloud Development Kit | `Arch_Developer-Tools/64/Arch_AWS-Cloud-Development-Kit_64.svg` |
+| Amazon SageMaker | `Arch_Analytics/64/Arch_Amazon-SageMaker_64.svg` |
+| Amazon SageMaker AI | `Arch_Artificial-Intelligence/64/Arch_Amazon-SageMaker-AI_64.svg` |
+| Amazon SageMaker Studio Lab | `Arch_Artificial-Intelligence/64/Arch_Amazon-SageMaker-Studio-Lab_64.svg` |
+| Amazon SageMaker Ground Truth | `Arch_Artificial-Intelligence/64/Arch_Amazon-SageMaker-Ground-Truth_64.svg` |
+
+These are archive paths, not installed references. SageMaker and SageMaker AI
+are separate products; Studio Lab and Ground Truth also remain distinct. No
+ambiguous `sagemaker` alias, product substitution, or fallback to AWS's company
+logo is provided. SVG Logos' CloudFormation asset is independently available
+under the SVG Logos source terms above. Source and licensing review: 2026-09-30.
 
 ### Browsing icons
 
@@ -152,6 +264,16 @@ After checking out the repo, install dependencies and run the tests:
 bundle install
 bundle exec rake spec
 ```
+
+To replay the brand-library browser demo (downloads on first run):
+
+```bash
+bundle exec rackup demo/brand_icons.ru -p 5701 -o 127.0.0.1
+```
+
+Open `http://localhost:5701/demo` and click **Replay**. The seven steps check
+Power BI, CloudFormation, Dagster in both themes, IBM Cloud, and the existing
+`lucide/check` reference through the gallery.
 
 ## Contributing
 
