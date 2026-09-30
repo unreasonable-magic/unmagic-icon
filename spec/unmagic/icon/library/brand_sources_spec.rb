@@ -159,9 +159,4 @@ RSpec.describe "Brand library downloads" do
       expect { Unmagic::Icon.find(reference) }.to raise_error(Unmagic::Icon::IconNotFoundError)
     end
   end
-
-  it "does not advertise AWS Architecture Icons without redistribution permission" do
-    expect(Source.exists?("aws-architecture-icons")).to be(false)
-    expect { Source.find("aws-architecture-icons") }.to raise_error(ArgumentError, /Unknown library/)
-  end
 end

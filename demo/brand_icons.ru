@@ -8,7 +8,7 @@ require_relative "../lib/unmagic/icon/library/source"
 require_relative "../lib/unmagic/icon/web"
 
 base = File.expand_path("../tmp/brand-demo", __dir__)
-%w[svg-logos dashboard-icons carbon-pictograms lucide].each do |key|
+%w[svg-logos dashboard-icons carbon-pictograms aws-architecture-icons lucide].each do |key|
   Unmagic::Icon::Library::Source.find(key).new.download(target_dir: File.join(base, key))
 end
 Unmagic::Icon.configuration.paths = [ base ]

@@ -21,6 +21,9 @@ const steps = [
   ['dashboard-icons', 'dagster', ['dagster-light', 'dagster-dark'], 'dark'],
   ['dashboard-icons', 'powerbi', ['powerbi'], 'light'],
   ['carbon-pictograms', 'ibm--cloud', ['ibm--cloud'], 'light'],
+  ['aws-architecture-icons', 'CloudFormation', ['Arch_AWS-CloudFormation_64'], 'light'],
+  ['aws-architecture-icons', 'Cloud-Development-Kit', ['Arch_AWS-Cloud-Development-Kit_64'], 'light'],
+  ['aws-architecture-icons', 'SageMaker', ['Arch_Amazon-SageMaker_64', 'Arch_Amazon-SageMaker-AI_64', 'Arch_Amazon-SageMaker-Studio-Lab_64', 'Arch_Amazon-SageMaker-Ground-Truth_64'], 'light'],
   ['lucide', 'check', ['check'], 'light']
 ];
 const gallery = document.querySelector('#gallery');
@@ -48,7 +51,7 @@ document.querySelector('#replay').onclick = async function () {
       document.querySelector('#results').append(result);
       await new Promise(resolve => setTimeout(resolve, 1800));
     }
-    document.querySelector('#status').textContent = 'All 7 demo steps passed';
+    document.querySelector('#status').textContent = `All ${steps.length} demo steps passed`;
   } catch (error) {
     document.querySelector('#status').textContent = `FAIL: ${error.message}`;
   } finally {
