@@ -128,6 +128,7 @@ Available libraries:
 | `material-file-icons` | Material File Icons | Material Design file icons with filename/extension aliases                   |
 | `silk`                | Silk Icons Scalable | The classic silk icon set recreated as SVG                                   |
 | `coloured-icons`      | Coloured Icons      | Full-colour brand and technology logos                                       |
+| `random-icons`        | Random Icons        | Keith Pitt's personal collection of SVG icons missing from other packs       |
 | `bootstrap-icons`     | Bootstrap Icons     | Official open source SVG icon library for Bootstrap                          |
 | `octicons`            | Octicons            | Icons and icon font from GitHub                                              |
 | `iconoir`             | Iconoir             | Free open source icons designed on a 24x24 grid                             |
@@ -138,6 +139,30 @@ Available libraries:
 | `homarr-icons` | Homarr Dashboard Icons | Service logos with available light/dark variants |
 | `carbon-pictograms` | IBM Carbon Pictograms | IBM pictograms including IBM Cloud |
 | `aws-architecture-icons` | AWS Architecture Icons | Official 64px service SVGs; AWS usage terms apply |
+
+### Random Icons
+
+[`keithpitt/random-icons`](https://github.com/keithpitt/random-icons) is a growing
+personal collection. Add SVGs directly to its `icons/` directory and push to
+`main`. The downloader follows `main`, so new icons do not require a gem release.
+
+```ruby
+Unmagic::Icon.configure do |config|
+  config.libraries = [:"random-icons"]
+end
+```
+
+```bash
+bin/rails 'unmagic:icons:download[random-icons]'
+# Refresh after adding or changing icons upstream:
+bin/rails 'unmagic:icons:download[random-icons,force]'
+```
+
+An `icons/example.svg` file is available as `random-icons/example`. The pack
+includes Rotten Tomatoes rating badges and colored/monochrome IMDb logos. A forced
+refresh overwrites matching files but does not remove deleted icons. README,
+per-asset attribution, `sources.json`, and any `licenses/` directory are retained on download;
+icons are subject to their individual terms, not the gem's MIT license.
 
 ### Brand and cloud libraries
 
